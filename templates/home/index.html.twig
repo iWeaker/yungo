@@ -3,18 +3,59 @@
 {% block title %}Hello HomeController!{% endblock %}
 
 {% block body %}
+<div class="mt-5">
+   <p class="font-sans font-bold text-center text-lg subpixel-antialiased ">Ultimos cinco reportes registrados</p>
+   <!--<x-tabla-index/>-->
+   <div class= "overflow-hidden flex items-center justify-center" style="background: #edf2f7;">
+    <div class="flex items-center justify-center">
+        <div class="inset-x-0 bottom-0">
+            <div id="tabla-equipo">Loading...</div>
+            <script type="text/javascript">
+               $(function() {
+                   $('#tabla-equipo').initDataTables({{ datatable_settings(datatable) }}, { searching: true });
+              });
+            </script>
+        </div>
+    </div>
+</div>
+
+<script>
+  /*
+  $(document).ready(function(){
+    $('#problemaTicket').on("click",function(){
+      //Arreglar para que tome el valor de la ultima casilla de los tickets
+      prueba = $(this).val();
+      console.log(prueba);
+      //url=`tickets/${value}`;
+      //window.location.replace(url);
+    });
+  });
+  */
+</script>
+
 <style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/home/linuxgeek/Documentos/Proyectos/Tickets/src/Controller/HomeController.php'|file_link(0) }}">src/Controller/HomeController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/home/linuxgeek/Documentos/Proyectos/Tickets/templates/home/index.html.twig'|file_link(0) }}">templates/home/index.html.twig</a></code></li>
-    </ul>
+    html,
+    body {
+      height: 100%;
+    }
+  
+    @media (min-width: 640px) {
+      table {
+        display: inline-table !important;
+      }
+  
+      thead tr:not(:first-child) {
+        display: none;
+      }
+    }
+  
+    td:not(:last-child) {
+      border-bottom: 0;
+    }
+  
+    th:not(:last-child) {
+      border-bottom: 2px solid rgba(0, 0, 0, .1);
+    }
+  </style>
 </div>
 {% endblock %}

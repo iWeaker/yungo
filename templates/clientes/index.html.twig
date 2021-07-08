@@ -17,61 +17,11 @@
 <div class= "overflow-hidden flex items-center justify-center" style="background: #edf2f7;">
     <div class="flex items-center justify-center">
         <div class="inset-x-0 bottom-0">
-            <table id="tabla-cliente" class="w-full flex flex-row flex-no-wrap sm:bg-white rounded-lg overflow-hidden sm:shadow-lg my-5">
-                <thead class="text-white">
-                    <tr class="bg-teal-400 flex flex-col flex-no wrap sm:table-row rounded-l-lg sm:rounded-none mb-2 sm:mb-0">
-                        <th class="p-3 text-left">Id</th>
-                        <th class="p-3 text-left">Cliente</th>
-                        <th class="p-3 text-left">Domicilio</th>
-                        <th class="p-3 text-left">Email</th>
-                        <th class="p-3 text-left">Telefono</th>
-                        <th class="p-3 text-left">Action</th> 
-                    </tr>  
-                </thead>
-            </table>
+            <div id="tabla-equipo">Loading...</div>
             <script type="text/javascript">
-                $(function(){
-                  $.ajaxSetup({
-                    headers: {
-                      'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')
-                    }
-                  });
-                  var table = $('#tabla-cliente').DataTable({
-                    ajax: '',
-                    responsive: true,
-                    method:'GET',
-                    serverSide: true,
-                    processing: true,
-                    columns:[
-                      {data:'idCliente', name:'idCliente' },
-                      {data:'nombre', name:'nombre'},
-                      {data: 'domicilio', name:'domicilio'},
-                      {data: 'email', name: 'email'},
-                      {data: 'telefono', name:'telefono'},
-                      {data: 'action', name: 'action', orderable: false, searchable: false},
-                    ]
-                  });
-                  $('#tabla-cliente tbody').on('click','#btn-delete', function(){
-                    var cliente_id = $(this).data("value");
-                    var result = confirm('Esta seguro de eliminar a este usuario?');
-                    if(result)
-                    {
-                      $.ajax({
-                        type:"DELETE",
-                        url:"/clientes"+"/"+cliente_id,
-                        success: function(data)
-                        {
-                          table.draw();
-                        },
-                        error: function(data){
-                          console.log('Error:',data);
-                        }
-                      });
-                    }else{
-                      return false;
-                    }
-                  });
-                });
+               $(function() {
+                   $('#tabla-equipo').initDataTables({{ datatable_settings(datatable) }}, { searching: true });
+              });
             </script>
         </div>
     </div>

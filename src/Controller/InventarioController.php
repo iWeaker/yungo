@@ -25,10 +25,10 @@ class InventarioController extends AbstractController
     {
         $table = $dataTableFactory->create()
                 ->add('id', TextColumn::class)
+                ->add('mac_inventory', TextColumn::class)
+                ->add('model_inventory', TextColumn::class)
                 ->add('brand_inventory', TextColumn::class)
                 ->add('type_inventory', TextColumn::class)
-                ->add('model_inventory', TextColumn::class)
-                ->add('mac_inventory', TextColumn::class)
                 ->createAdapter(ORMAdapter::class, [
                     'entity' => Inventario::class,
             ])->handleRequest($request); 
