@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+        <link href="{{ asset('css/tailwind.min.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/jquery.dataTables.min.css') }}" rel="stylesheet">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+        <script src="http://cdn.datatables.net/plug-ins/1.10.15/dataRender/datetime.js"></script>
+        <script src="http://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+        {% block stylesheets %}
+            {#{{ encore_entry_link_tags('app') }}#}
+        {% endblock %}
+
+        {% block javascripts %}
+            {#{{ encore_entry_script_tags('app') }}#}
+        {% endblock %}
+    </head>
+    <body>
+        <div class="flex min-h-screen">
+            <nav class="w-60 flex-shrink-4">
+                <div class="flex-auto bg-gray-900 h-full">
+                    <div class="flex flex-col overflow-y-auto">
+                        <ul class="relative m-0 p-0 list-none h-full">
+                            <li class="text-white text-2xl p-4 w-full flex relative shadow-sm justify-start bg-gray-800 border-b-2 border-gray-700">
+                                Yungo
+                            </li>
+                            <li class="text-white p-4 w-full flex relative shadow-sm justify-start bg-gray-800 border-b-2 border-gray-700">
+                                <div class="flex-auto my-1">
+                                    <span>Control Interno</span>
+                                </div>
+                            </li>
+                            <li class="p-4 w-full flex relative shadow-sm">
+                                <div class="flex-auto my-1">
+                                    <span class="text-white font-medium">Apartados</span>
+                                </div>
+                            </li>
+                            <div class="text-blue-400 flex relative px-4 hover:bg-gray-700 cursor-pointer">
+                                <div class="mr-4 my-auto">
+                                </div>
+                                <div class="flex-auto my-1">
+                                    <a href="/"><span>Inicio</span></a>
+                                </div>
+                            </div>
+                            <div class="text-blue-400 flex relative px-4 hover:bg-gray-700 cursor-pointer">
+                                <div class="mr-4 my-auto">
+                                </div>
+                                <div class="flex-auto my-1">
+                                    <span><a href="/clientes">Clientes</a></span>
+                                </div>
+                            </div>
+                            <div class="text-blue-400 flex relative px-4 hover:bg-gray-700 cursor-pointer">
+                                <div class="mr-4 my-auto">
+                                </div>
+                                <div class="flex-auto my-1">
+                                    <span><a href="/tickets">Tickets</a></span>
+                                </div>
+                            </div>
+                            <div class="text-blue-400 flex relative px-4 hover:bg-gray-700 cursor-pointer">
+                                <div class="mr-4 my-auto">
+                                </div>
+                                <div class="flex-auto my-1">
+                                    <span><a href="/inventario">Inventario</a></span>
+                                </div>
+                            </div>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <div class="flex flex-col w-full">
+                <header class="text-white bg-blue-400 left-auto top-0 right-0">
+                    <div class="h-12 px-6 fle relative items-center justify-end">
+                    </div>
+                    
+                    <div class="text-white bg-blue-400 flex flex-shrink-0 flex-col">
+                        <div class="flex relative items-center p-4 h-12">
+                            
+                        </div>
+                    </div>
+                </header>
+                {% block body %}{% endblock %}
+            </div>
+        </div>
+    </body>
+</html>
