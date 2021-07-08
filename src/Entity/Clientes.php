@@ -17,10 +17,7 @@ class Clientes
      */
     private $id;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $id_client;
+
 
     /**
      * @ORM\Column(type="string", length=150)
@@ -47,17 +44,7 @@ class Clientes
         return $this->id;
     }
 
-    public function getIdClient(): ?int
-    {
-        return $this->id_client;
-    }
 
-    public function setIdClient(int $id_client): self
-    {
-        $this->id_client = $id_client;
-
-        return $this;
-    }
 
     public function getNameClient(): ?string
     {

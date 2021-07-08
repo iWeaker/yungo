@@ -23,11 +23,6 @@ class Inventario
     private $mac_inventory;
 
     /**
-     * @ORM\Column(type="integer")
-     */
-    private $id_inventory;
-
-    /**
      * @ORM\Column(type="string", length=255)
      */
     private $model_inventory;
@@ -59,17 +54,6 @@ class Inventario
         return $this;
     }
 
-    public function getIdInventory(): ?int
-    {
-        return $this->id_inventory;
-    }
-
-    public function setIdInventory(int $id_inventory): self
-    {
-        $this->id_inventory = $id_inventory;
-
-        return $this;
-    }
 
     public function getModelInventory(): ?string
     {
