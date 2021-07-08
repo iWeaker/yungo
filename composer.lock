@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "12d4bc6cfc6de1067f00f9f3bc5edb01",
+    "content-hash": "b61305e40049cba64e89a3be6eb593f4",
     "packages": [
         {
             "name": "composer/package-versions-deprecated",
@@ -1584,6 +1584,105 @@
                 }
             ],
             "time": "2021-06-17T13:39:43+00:00"
+        },
+        {
+            "name": "omines/datatables-bundle",
+            "version": "0.5.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/omines/datatables-bundle.git",
+                "reference": "b8a16c365f9d8e97d1e890e8783249f979f0d7ca"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/omines/datatables-bundle/zipball/b8a16c365f9d8e97d1e890e8783249f979f0d7ca",
+                "reference": "b8a16c365f9d8e97d1e890e8783249f979f0d7ca",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2",
+                "symfony/event-dispatcher": "^4.4|^5.0",
+                "symfony/framework-bundle": "^4.4|^5.0",
+                "symfony/options-resolver": "^4.4|^5.0",
+                "symfony/property-access": "^4.4|^5.0",
+                "symfony/translation": "^4.4|^5.0"
+            },
+            "require-dev": {
+                "doctrine/common": "^2.6|^3.0",
+                "doctrine/doctrine-bundle": "^2.3|^3.0",
+                "doctrine/orm": "^2.6.3",
+                "doctrine/persistence": "^1.3.4|^2.0",
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-pdo_sqlite": "*",
+                "ext-zip": "*",
+                "friendsofphp/php-cs-fixer": "^2.7",
+                "mongodb/mongodb": "^1.2",
+                "ocramius/package-versions": "^1.4",
+                "phpoffice/phpspreadsheet": "^1.6",
+                "ruflin/elastica": "^6.0",
+                "symfony/browser-kit": "^4.4|^5.0",
+                "symfony/css-selector": "^4.4|^5.0",
+                "symfony/dom-crawler": "^4.4|^5.0",
+                "symfony/intl": "^4.4|^5.0",
+                "symfony/mime": "^4.4|^5.0",
+                "symfony/phpunit-bridge": "^4.4|^5.0",
+                "symfony/twig-bundle": "^4.4|^5.0",
+                "symfony/var-dumper": "^4.4|^5.0",
+                "symfony/yaml": "^4.4|^5.0"
+            },
+            "suggest": {
+                "doctrine/doctrine-bundle": "For integrated access to Doctrine object managers",
+                "doctrine/orm": "For full automated integration with Doctrine entities",
+                "mongodb/mongodb": "For integration with MongoDB collections",
+                "phpoffice/phpspreadsheet": "To export the data from DataTables to Excel",
+                "ruflin/elastica": "For integration with Elasticsearch indexes",
+                "symfony/twig-bundle": "To use default Twig based rendering and TwigColumn"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.5-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Omines\\DataTablesBundle\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Robbert Beesems",
+                    "email": "robbert.beesems@omines.com",
+                    "homepage": "https://omines.nl/"
+                },
+                {
+                    "name": "Niels Keurentjes",
+                    "email": "niels.keurentjes@omines.com",
+                    "homepage": "https://omines.nl/"
+                }
+            ],
+            "description": "Symfony DataTables Bundle with native Doctrine ORM, Elastica and MongoDB support",
+            "keywords": [
+                "bundle",
+                "datatable",
+                "datatables",
+                "doctrine",
+                "elastica",
+                "jquery",
+                "mongodb",
+                "orm",
+                "symfony"
+            ],
+            "support": {
+                "issues": "https://github.com/omines/datatables-bundle/issues",
+                "source": "https://github.com/omines/datatables-bundle/tree/0.5.5"
+            },
+            "time": "2021-06-29T08:12:37+00:00"
         },
         {
             "name": "psr/cache",
@@ -3494,6 +3593,75 @@
             "time": "2021-06-30T08:27:49+00:00"
         },
         {
+            "name": "symfony/options-resolver",
+            "version": "v5.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/options-resolver.git",
+                "reference": "162e886ca035869866d233a2bfef70cc28f9bbe5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/options-resolver/zipball/162e886ca035869866d233a2bfef70cc28f9bbe5",
+                "reference": "162e886ca035869866d233a2bfef70cc28f9bbe5",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.5",
+                "symfony/deprecation-contracts": "^2.1",
+                "symfony/polyfill-php73": "~1.0",
+                "symfony/polyfill-php80": "^1.15"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\OptionsResolver\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Provides an improved replacement for the array_replace PHP function",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "config",
+                "configuration",
+                "options"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/options-resolver/tree/v5.3.0"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2021-05-26T17:43:10+00:00"
+        },
+        {
             "name": "symfony/polyfill-intl-grapheme",
             "version": "v1.23.0",
             "source": {
@@ -3980,6 +4148,177 @@
             "time": "2021-05-21T13:25:03+00:00"
         },
         {
+            "name": "symfony/property-access",
+            "version": "v5.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/property-access.git",
+                "reference": "8988399a556cffb0fba9bb3603f8d1ba4543eceb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/property-access/zipball/8988399a556cffb0fba9bb3603f8d1ba4543eceb",
+                "reference": "8988399a556cffb0fba9bb3603f8d1ba4543eceb",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.5",
+                "symfony/deprecation-contracts": "^2.1",
+                "symfony/polyfill-php80": "^1.15",
+                "symfony/property-info": "^5.2"
+            },
+            "require-dev": {
+                "symfony/cache": "^4.4|^5.0"
+            },
+            "suggest": {
+                "psr/cache-implementation": "To cache access methods."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\PropertyAccess\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Provides functions to read and write from/to an object or array using a simple string notation",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "access",
+                "array",
+                "extraction",
+                "index",
+                "injection",
+                "object",
+                "property",
+                "property path",
+                "reflection"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/property-access/tree/v5.3.0"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2021-05-26T17:43:10+00:00"
+        },
+        {
+            "name": "symfony/property-info",
+            "version": "v5.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/property-info.git",
+                "reference": "6f8bff281f215dbf41929c7ec6f8309cdc0912cf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/property-info/zipball/6f8bff281f215dbf41929c7ec6f8309cdc0912cf",
+                "reference": "6f8bff281f215dbf41929c7ec6f8309cdc0912cf",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.5",
+                "symfony/deprecation-contracts": "^2.1",
+                "symfony/polyfill-php80": "^1.15",
+                "symfony/string": "^5.1"
+            },
+            "conflict": {
+                "phpdocumentor/reflection-docblock": "<3.2.2",
+                "phpdocumentor/type-resolver": "<1.4.0",
+                "symfony/dependency-injection": "<4.4"
+            },
+            "require-dev": {
+                "doctrine/annotations": "^1.10.4",
+                "phpdocumentor/reflection-docblock": "^3.0|^4.0|^5.0",
+                "symfony/cache": "^4.4|^5.0",
+                "symfony/dependency-injection": "^4.4|^5.0",
+                "symfony/serializer": "^4.4|^5.0"
+            },
+            "suggest": {
+                "phpdocumentor/reflection-docblock": "To use the PHPDoc",
+                "psr/cache-implementation": "To cache results",
+                "symfony/doctrine-bridge": "To use Doctrine metadata",
+                "symfony/serializer": "To use Serializer metadata"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\PropertyInfo\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Kévin Dunglas",
+                    "email": "dunglas@gmail.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Extracts information about PHP class' properties using metadata of popular sources",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "doctrine",
+                "phpdoc",
+                "property",
+                "symfony",
+                "type",
+                "validator"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/property-info/tree/v5.3.1"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2021-05-31T12:40:48+00:00"
+        },
+        {
             "name": "symfony/proxy-manager-bridge",
             "version": "v5.3.0",
             "source": {
@@ -4436,6 +4775,101 @@
                 }
             ],
             "time": "2021-06-27T11:44:38+00:00"
+        },
+        {
+            "name": "symfony/translation",
+            "version": "v5.3.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/translation.git",
+                "reference": "380b8c9e944d0e364b25f28e8e555241eb49c01c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/380b8c9e944d0e364b25f28e8e555241eb49c01c",
+                "reference": "380b8c9e944d0e364b25f28e8e555241eb49c01c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.5",
+                "symfony/deprecation-contracts": "^2.1",
+                "symfony/polyfill-mbstring": "~1.0",
+                "symfony/polyfill-php80": "^1.15",
+                "symfony/translation-contracts": "^2.3"
+            },
+            "conflict": {
+                "symfony/config": "<4.4",
+                "symfony/dependency-injection": "<5.0",
+                "symfony/http-kernel": "<5.0",
+                "symfony/twig-bundle": "<5.0",
+                "symfony/yaml": "<4.4"
+            },
+            "provide": {
+                "symfony/translation-implementation": "2.3"
+            },
+            "require-dev": {
+                "psr/log": "~1.0",
+                "symfony/config": "^4.4|^5.0",
+                "symfony/console": "^4.4|^5.0",
+                "symfony/dependency-injection": "^5.0",
+                "symfony/finder": "^4.4|^5.0",
+                "symfony/http-kernel": "^5.0",
+                "symfony/intl": "^4.4|^5.0",
+                "symfony/polyfill-intl-icu": "^1.21",
+                "symfony/service-contracts": "^1.1.2|^2",
+                "symfony/yaml": "^4.4|^5.0"
+            },
+            "suggest": {
+                "psr/log-implementation": "To use logging capability in translator",
+                "symfony/config": "",
+                "symfony/yaml": ""
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "Resources/functions.php"
+                ],
+                "psr-4": {
+                    "Symfony\\Component\\Translation\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Provides tools to internationalize your application",
+            "homepage": "https://symfony.com",
+            "support": {
+                "source": "https://github.com/symfony/translation/tree/v5.3.3"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2021-06-27T12:22:47+00:00"
         },
         {
             "name": "symfony/translation-contracts",

@@ -47,4 +47,8 @@ class InventarioRepository extends ServiceEntityRepository
         ;
     }
     */
+
+
+
+
 }
