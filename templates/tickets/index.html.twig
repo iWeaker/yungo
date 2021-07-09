@@ -16,20 +16,48 @@
 <div class= "overflow-hidden flex items-center justify-center" style="background: #edf2f7;">
     <div class="flex items-center justify-center">
         <div class="inset-x-0 bottom-0">
-            <div id="tabla-equipo">Loading...</div>
-            <script type="text/javascript">
-               $(function() {
-                   $('#tabla-equipo').initDataTables({{ datatable_settings(datatable) }}, { searching: true });
-              });
-            </script>
+            
             
         </div>
     </div>
+    <table id="editTable"></table>
 </div>
+<script>
+$(document).ready(function() {
+    var dataSet = "{{ response }}";  
+    var dataSetRemove = JSON.parse(dataSet.replace(/&quot;/g,'"')); 
+    var table = $('#editTable').DataTable( {
+        data: dataSetRemove,
+        columns: [
+            { title: "Identificacion" },
+            { title: "Tipo" },
+            { title: "Fecha" },
+            { title: "Descripcion" },
+            { title: "Estado" },
+            { title: "Button"}, 
+           
+        ], 
+        "columnDefs": [ {
+            "targets": -1,
+            "data": null,
+            "defaultContent": "<button>Revisar</button>"
+        } ]
+        
+    } );
+    $('#editTable tbody').on( 'click', 'button', function () {
+        var data = table.row( $(this).parents('tr') ).data();
+        //alert( data[0] +"'s salary is: "+ data[ 2 ] );
+        window.location.href = "/tickets/show/"+data[0];
+    } );
+} );
+</script>
 <style>
     html,
     body {
       height: 100%;
+    }
+    #editTable_wrapper{
+      max-width:1000px;
     }
     @media (min-width: 640px) {
       table {

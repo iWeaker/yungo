@@ -11,32 +11,55 @@ use Omines\DataTablesBundle\Column\TextColumn;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Omines\DataTablesBundle\Adapter\Doctrine\ORMAdapter;
+use Omines\DataTablesBundle\DataTable;
+
+use Symfony\Component\Serializer\Encoder\JsonEncode;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
+
+
 
 class HomeController extends AbstractController
 {
+    private $serializer; 
+    private $normalizers;
+    private $encoders; 
+
+    function _construct(){
+        $this->encoders = [new XmlEncoder(), new JsonEncoder()];
+        $this->normalizers = [new ObjectNormalizer()];
+
+        $this->serializer = new Serializer($this->normalizers, $this->encoders);
+    }
     /**
      * @Route("/", name="home")
      */
-    public function index(DataTableFactory $dataTableFactory, Request $request): Response
+    public function index( DataTableFactory $dataTableFactory, Request $request): Response
     {
-        $table = $dataTableFactory->create()
-            ->add('id', TextColumn::class)
-            ->add('name_client', TextColumn::class)
-            ->add('email_client', TextColumn::class)
-            ->add('phone_client', TextColumn::class)
-            ->add('address_client', TextColumn::class)
-            ->createAdapter(ORMAdapter::class, [
-                'entity' => Clientes::class,
-            ])->handleRequest($request); 
-
-        if($table->isCallback()){
-            return $table->getResponse(); 
+        $client = $this->getDoctrine()
+        ->getRepository(Clientes::class)
+        ->findAll();
+    
+        $response = array();
+        foreach ($client as $user) {
+            $response[] = array(
+                $user->getId(),
+                $user->getNameClient(),
+                $user->getEmailClient(), 
+                $user->getPhoneClient(), 
+                $user->getAddressClient(), 
+            );
         }
-            return $this->render('home/index.html.twig', [
-            'datatable' => $table,
+        
+        return $this->render('home/index.html.twig', [
+            'response' => json_encode($response)
         ]);
+        
     }
-
-
+    
+    
 
 }

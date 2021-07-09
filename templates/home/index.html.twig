@@ -3,36 +3,89 @@
 {% block title %}Hello HomeController!{% endblock %}
 
 {% block body %}
+    <div style="position:relative; width:400px; height:300px">
+        <canvas id="myChart" width="400" height="300"></canvas>
+    </div>
+
 <div class="mt-5">
+    
    <p class="font-sans font-bold text-center text-lg subpixel-antialiased ">Ultimos cinco reportes registrados</p>
    <!--<x-tabla-index/>-->
    <div class= "overflow-hidden flex items-center justify-center" style="background: #edf2f7;">
     <div class="flex items-center justify-center">
         <div class="inset-x-0 bottom-0">
-            <div id="tabla-equipo">Loading...</div>
-            <script type="text/javascript">
-               $(function() {
-                   $('#tabla-equipo').initDataTables({{ datatable_settings(datatable) }}, { searching: true });
-              });
-            </script>
         </div>
     </div>
+   <table id="editTable"></table>
+    
 </div>
-
+    
+    {# You can pass HTML attributes as a second argument to add them on the <canvas> tag #}
 <script>
-  /*
-  $(document).ready(function(){
-    $('#problemaTicket').on("click",function(){
-      //Arreglar para que tome el valor de la ultima casilla de los tickets
-      prueba = $(this).val();
-      console.log(prueba);
-      //url=`tickets/${value}`;
-      //window.location.replace(url);
-    });
-  });
-  */
+$(document).ready(function() {
+    var dataSet = "{{ response }}";  
+    var dataSetRemove = JSON.parse(dataSet.replace(/&quot;/g,'"')); 
+    var table = $('#editTable').DataTable( {
+        data: dataSetRemove,
+        columns: [
+            { title: "Identificacion" },
+            { title: "Nombre" },
+            { title: "Correo" },
+            { title: "Numero" },
+            { title: "Direccion" },
+            { title: "Button"}, 
+           
+        ], 
+        "columnDefs": [ {
+            "targets": -1,
+            "data": null,
+            "defaultContent": "<button>Click!</button>"
+        } ]
+        
+    } );
+    $('#editTable tbody').on( 'click', 'button', function () {
+        var data = table.row( $(this).parents('tr') ).data();
+        alert( data[0] +"'s salary is: "+ data[ 2 ] );
+    } );
+} );
 </script>
-
+<script>
+var ctx = document.getElementById('myChart').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        datasets: [{
+            label: '# of Votes',
+            data: [12, 19, 3, 5, 2, 3],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+</script>
 <style>
     html,
     body {

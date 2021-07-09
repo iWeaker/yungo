@@ -29,10 +29,11 @@ class InventarioController extends AbstractController
                 ->add('model_inventory', TextColumn::class)
                 ->add('brand_inventory', TextColumn::class)
                 ->add('type_inventory', TextColumn::class)
+            
                 ->createAdapter(ORMAdapter::class, [
                     'entity' => Inventario::class,
             ])->handleRequest($request); 
-
+        
         if($table->isCallback()){
             return $table->getResponse(); 
         }
@@ -48,6 +49,19 @@ class InventarioController extends AbstractController
      */
     public function create(){
         return $this->render('inventario/create.html.twig');
+    }
+
+    /**
+     * @Route("/inventario/edit/{id}" , name="editInventario")
+     *
+     * 
+     */
+    public function edit($id){
+        return $this->render('inventario/edit.html.twig', [
+            'brand' => 'asdasdasd', 
+            'model' => 'asf', 
+            'id' => $id
+        ]);
     }
 
 
