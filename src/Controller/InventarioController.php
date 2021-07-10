@@ -23,22 +23,23 @@ class InventarioController extends AbstractController
      */
     public function index(Request $request, DataTableFactory $dataTableFactory): Response
     {
-        $table = $dataTableFactory->create()
-                ->add('id', TextColumn::class)
-                ->add('mac_inventory', TextColumn::class)
-                ->add('model_inventory', TextColumn::class)
-                ->add('brand_inventory', TextColumn::class)
-                ->add('type_inventory', TextColumn::class)
-            
-                ->createAdapter(ORMAdapter::class, [
-                    'entity' => Inventario::class,
-            ])->handleRequest($request); 
-        
-        if($table->isCallback()){
-            return $table->getResponse(); 
+        $clientes = $this->getDoctrine()
+        ->getRepository(Inventario::class)
+        ->findAll();
+    
+        $response = array();
+        foreach ($clientes as $cliente) {
+            $response[] = array(
+                $cliente->getId(),
+                $cliente->getMacInventory(),
+                $cliente->getModelInventory(), 
+                $cliente->getBrandInventory(), 
+                $cliente->getTypeInventory(), 
+            );
         }
+        
             return $this->render('inventario/index.html.twig', [
-            'datatable' => $table,
+            'response' => json_encode($response),
         ]);
     }
 
@@ -63,6 +64,16 @@ class InventarioController extends AbstractController
             'id' => $id
         ]);
     }
+
+    /**
+     * @Route("/inventario/assign/{id}", name="assignInventario")
+     * 
+     */
+
+     public function assign($id){
+         return $this->render('inventario/assign.html.twig'); 
+
+     }
 
 
 }

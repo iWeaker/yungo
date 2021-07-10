@@ -14,24 +14,74 @@
   </div>
 </div>
 
-<div class= "overflow-hidden flex items-center justify-center" style="background: #edf2f7;">
+<div class= "overflow-hidden flex items-center justify-center" >
     <div class="flex items-center justify-center">
         <div class="inset-x-0 bottom-0">
-            <div id="tabla-equipo">Loading...</div>
-            <script type="text/javascript">
-               $(function() {
-                   $('#tabla-equipo').initDataTables({{ datatable_settings(datatable) }}, { searching: true });
-              });
-            </script>
+           <table id="tabla-clientes" class="">
+                <thead class="text-white">
+                    <tr class="bg-teal-400 flex flex-col flex-no wrap sm:table-row rounded-l-lg sm:rounded-none mb-2 sm:mb-0">
+                        <th class="p-3 text-left"></th>
+                        <th class="p-3 text-left"></th>
+                        <th class="p-3 text-left"></th>
+                        <th class="p-3 text-left"></th>
+                        <th class="p-3 text-left"></th>
+                        <th class="p-3 text-left"></th>
+  
+                    </tr>  
+                </thead>
+            </table>
         </div>
     </div>
 </div>
+<script>
+$(document).ready(function() {
+    var dataSet = "{{ response }}";  
+    var dataSetRemove = JSON.parse(dataSet.replace(/&quot;/g,'"')); 
+    var table = $('#tabla-clientes').DataTable( {
+        data: dataSetRemove,
+        "bLengthChange": false,
+        "bFilter": true,
+        "bInfo": false,
+        "bAutoWidth": false ,
+        columns: [
+            { title: "#", "width":100 },
+            { title: "Nombre", "width":300},
+            { title: "Correo", "width":100 },
+            { title: "Telefono", "width":100 },
+            { title: "Direccion", "width":300 },
+            { title: "Acciones", "width":300}, 
+        ], 
+        "columnDefs": [ {
+            "targets": -1,
+            "data": null,
+            "width": 300,
+            "defaultContent": "<button id='view' class='view bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>Mostrar</button>"+
+                               "<button id='edit' class='view bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' style='margin-left:6px'>Editar</button>"+
+                               "<button id='delete' class='view bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded' style='margin-left:6px'>Eliminar</button>"
+        } ]
+        
+    } );
+    $('#tabla-clientes tbody').on( 'click','button', function () {
+        var action = this.id;
+        var data = table.row( $(this).parents('tr') ).data();
+        if (action=='view')
+        window.location.href = "/clientes/show/"+data[0];
+        if(action == 'edit')
+        window.location.href = "/clientes/edit/"+data[0];
+        if(action == 'delete')
+        window.location.href = "/clientes/delete/"+data[0];
+        
+    } );
+} );
+</script>
 <style>
     html,
     body {
       height: 100%;
     }
-  
+    #tabla-clientes_wrapper{
+      max-width:1320px
+    }
     @media (min-width: 640px) {
       table {
         display: inline-table !important;

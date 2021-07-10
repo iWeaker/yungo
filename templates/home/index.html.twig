@@ -11,12 +11,24 @@
     
    <p class="font-sans font-bold text-center text-lg subpixel-antialiased ">Ultimos cinco reportes registrados</p>
    <!--<x-tabla-index/>-->
-   <div class= "overflow-hidden flex items-center justify-center" style="background: #edf2f7;">
+   <div class= "overflow-hidden flex items-center justify-center" style="">
     <div class="flex items-center justify-center">
         <div class="inset-x-0 bottom-0">
+            <table id="tabla-home" class="">
+                <thead class="text-white">
+                    <tr class="bg-teal-400 flex flex-col flex-no wrap sm:table-row rounded-l-lg sm:rounded-none mb-2 sm:mb-0">
+                        <th class="p-3 text-left"></th>
+                        <th class="p-3 text-left"></th>
+                        <th class="p-3 text-left"></th>
+                        <th class="p-3 text-left"></th>
+                        <th class="p-3 text-left"></th>
+                        <th class="p-3 text-left"></th>
+                    </tr>  
+                </thead>
+            </table>
         </div>
     </div>
-   <table id="editTable"></table>
+   
     
 </div>
     
@@ -25,15 +37,15 @@
 $(document).ready(function() {
     var dataSet = "{{ response }}";  
     var dataSetRemove = JSON.parse(dataSet.replace(/&quot;/g,'"')); 
-    var table = $('#editTable').DataTable( {
+    var table = $('#tabla-home').DataTable( {
         data: dataSetRemove,
         columns: [
-            { title: "Identificacion" },
-            { title: "Nombre" },
-            { title: "Correo" },
-            { title: "Numero" },
-            { title: "Direccion" },
-            { title: "Button"}, 
+            { title: "Identificacion", "width":100 },
+            { title: "Nombre", "width":200 },
+            { title: "Correo", "width":200 },
+            { title: "Numero", "width":100 },
+            { title: "Direccion", "width":200 },
+            { title: "Acciones", "width":100}, 
            
         ], 
         "columnDefs": [ {
@@ -43,7 +55,7 @@ $(document).ready(function() {
         } ]
         
     } );
-    $('#editTable tbody').on( 'click', 'button', function () {
+    $('#tabla-home tbody').on( 'click', 'button', function () {
         var data = table.row( $(this).parents('tr') ).data();
         alert( data[0] +"'s salary is: "+ data[ 2 ] );
     } );
@@ -91,7 +103,9 @@ var myChart = new Chart(ctx, {
     body {
       height: 100%;
     }
-  
+    #tabla-home_wrapper{
+      max-width:1120px
+    }
     @media (min-width: 640px) {
       table {
         display: inline-table !important;

@@ -13,26 +13,69 @@
         </div>
     </div>
 </div>
-<div class= "overflow-hidden flex items-center justify-center" style="background: #edf2f7;">
+<div class= "overflow-hidden flex items-center justify-center">
     <div class="flex items-center justify-center">
         <div class="inset-x-0 bottom-0">
-            <div id="tabla-equipo">Loading...</div>
-            <script type="text/javascript">
-               $(function() {
-                
-                   $('#tabla-equipo').initDataTables({{ datatable_settings(datatable) }}, { searching: true });
-              });
-            </script>
+             <table id="tabla-inventario" class="">
+                <thead class="text-white">
+                    <tr class="bg-teal-400 flex flex-col flex-no wrap sm:table-row rounded-l-lg sm:rounded-none mb-2 sm:mb-0">
+                        <th class="p-3 text-left"></th>
+                        <th class="p-3 text-left"></th>
+                        <th class="p-3 text-left"></th>
+                        <th class="p-3 text-left"></th>
+                        <th class="p-3 text-left"></th>
+                        <th class="p-3 text-left"></th>
+                    </tr>  
+                </thead>
+            </table>
         </div>
     </div>
 </div>
-
+<script>
+$(document).ready(function() {
+    var dataSet = "{{ response }}";  
+    var dataSetRemove = JSON.parse(dataSet.replace(/&quot;/g,'"')); 
+    var table = $('#tabla-inventario').DataTable( {
+        data: dataSetRemove,
+        "bLengthChange": false,
+        "bFilter": true,
+        "bInfo": false,
+        "bAutoWidth": false ,
+        columns: [
+            { title: "Identificacion", "width":100 },
+            { title: "Mac", "width":200 },
+            { title: "Modelo", "width":200 },
+            { title: "Marca", "width":100 },
+            { title: "Tipo", "width":200 },
+            { title: "Acciones", "width":300}, 
+           
+        ], 
+        "columnDefs": [ {
+            "targets": -1,
+            "data": null,
+            "defaultContent": "<button id='assign' class='view bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>Asignar</button>"+
+                               "<button id='edit' class='view bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' style='margin-left:6px'>Editar</button>"
+        } ]
+        
+    } );
+    $('#tabla-inventario tbody').on( 'click', 'button', function () {
+        var action = this.id;
+        var data = table.row( $(this).parents('tr') ).data();
+        if (action=='assign')
+        window.location.href = "/inventario/assign/"+data[0];
+        if(action == 'edit')
+        window.location.href = "/inventario/edit/"+data[0];
+    } );
+} );
+</script>
 <style>
     html,
     body {
       height: 100%;
     }
-  
+     #tabla-inventario_wrapper{
+      max-width:920px
+    }
     @media (min-width: 640px) {
       table {
         display: inline-table !important;

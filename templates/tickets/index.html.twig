@@ -13,40 +13,55 @@
       </div>
     </div>
 </div>
-<div class= "overflow-hidden flex items-center justify-center" style="background: #edf2f7;">
+<div class= "overflow-hidden flex items-center justify-center" >
     <div class="flex items-center justify-center">
         <div class="inset-x-0 bottom-0">
-            
-            
+             <table id="tabla-tickets" class="">
+                <thead class="text-white">
+                    <tr class="bg-teal-400 flex flex-col flex-no wrap sm:table-row rounded-l-lg sm:rounded-none mb-2 sm:mb-0">
+                        <th class="p-3 text-left"></th>
+                        <th class="p-3 text-left"></th>
+                        <th class="p-3 text-left"></th>
+                        <th class="p-3 text-left"></th>
+                        <th class="p-3 text-left"></th>
+                        <th class="p-3 text-left"></th>
+                    </tr>  
+                </thead>
+            </table>
         </div>
     </div>
-    <table id="editTable"></table>
+   
 </div>
 <script>
 $(document).ready(function() {
     var dataSet = "{{ response }}";  
     var dataSetRemove = JSON.parse(dataSet.replace(/&quot;/g,'"')); 
-    var table = $('#editTable').DataTable( {
+    var table = $('#tabla-tickets').DataTable( {
         data: dataSetRemove,
+        "bLengthChange": false,
+        "bFilter": true,
+        "bInfo": false,
+        "bAutoWidth": false ,
         columns: [
-            { title: "Identificacion" },
-            { title: "Tipo" },
-            { title: "Fecha" },
-            { title: "Descripcion" },
-            { title: "Estado" },
-            { title: "Button"}, 
+            { title: "#", width: 100 },
+            { title: "Tipo", width: 100 },
+            { title: "Fecha", width: 300 },
+            { title: "Descripcion", width: 100 },
+            { title: "Estado", width: 100 },
+            { title: "Acciones", width: 100}, 
            
         ], 
         "columnDefs": [ {
             "targets": -1,
             "data": null,
-            "defaultContent": "<button>Revisar</button>"
+            "defaultContent": "<button id='view' class='view bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>Revisar</button>"
+                              
         } ]
         
     } );
-    $('#editTable tbody').on( 'click', 'button', function () {
+    $('#tabla-tickets tbody').on( 'click', 'button', function () {
         var data = table.row( $(this).parents('tr') ).data();
-        //alert( data[0] +"'s salary is: "+ data[ 2 ] );
+       
         window.location.href = "/tickets/show/"+data[0];
     } );
 } );
@@ -56,8 +71,8 @@ $(document).ready(function() {
     body {
       height: 100%;
     }
-    #editTable_wrapper{
-      max-width:1000px;
+    #tabla-tickets_wrapper{
+      max-width:900px;
     }
     @media (min-width: 640px) {
       table {
