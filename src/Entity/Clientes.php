@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ClientesRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -34,10 +36,23 @@ class Clientes
      */
     private $phone_client;
 
+
+
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\OneToMany(targetEntity=Ticket::class, mappedBy="fkClient")
      */
-    private $address_client;
+    private $tickets;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Direccion::class, mappedBy="clientes")
+     */
+    private $fkAddress;
+
+    public function __construct()
+    {
+        $this->tickets = new ArrayCollection();
+        $this->fkAddress = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -82,14 +97,64 @@ class Clientes
         return $this;
     }
 
-    public function getAddressClient(): ?string
+
+
+    /**
+     * @return Collection|Ticket[]
+     */
+    public function getTickets(): Collection
     {
-        return $this->address_client;
+        return $this->tickets;
     }
 
-    public function setAddressClient(string $address_client): self
+    public function addTicket(Ticket $ticket): self
     {
-        $this->address_client = $address_client;
+        if (!$this->tickets->contains($ticket)) {
+            $this->tickets[] = $ticket;
+            $ticket->setFkClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTicket(Ticket $ticket): self
+    {
+        if ($this->tickets->removeElement($ticket)) {
+            // set the owning side to null (unless already changed)
+            if ($ticket->getFkClient() === $this) {
+                $ticket->setFkClient(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Direccion[]
+     */
+    public function getFkAddress(): Collection
+    {
+        return $this->fkAddress;
+    }
+
+    public function addFkAddress(Direccion $fkAddress): self
+    {
+        if (!$this->fkAddress->contains($fkAddress)) {
+            $this->fkAddress[] = $fkAddress;
+            $fkAddress->setClientes($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFkAddress(Direccion $fkAddress): self
+    {
+        if ($this->fkAddress->removeElement($fkAddress)) {
+            // set the owning side to null (unless already changed)
+            if ($fkAddress->getClientes() === $this) {
+                $fkAddress->setClientes(null);
+            }
+        }
 
         return $this;
     }

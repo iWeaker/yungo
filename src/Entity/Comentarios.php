@@ -32,6 +32,12 @@ class Comentarios
      */
     private $createdAt_comment;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Ticket::class, inversedBy="comentarios")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $fkTicket;
+
    
 
     public function getId(): ?int
@@ -70,6 +76,18 @@ class Comentarios
     public function setCreatedAtComment(\DateTimeInterface $createdAt_comment): self
     {
         $this->createdAt_comment = $createdAt_comment;
+
+        return $this;
+    }
+
+    public function getFkTicket(): ?Ticket
+    {
+        return $this->fkTicket;
+    }
+
+    public function setFkTicket(?Ticket $fkTicket): self
+    {
+        $this->fkTicket = $fkTicket;
 
         return $this;
     }

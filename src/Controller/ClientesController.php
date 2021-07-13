@@ -26,8 +26,9 @@ class ClientesController extends AbstractController
                 $cliente->getId(),
                 $cliente->getNameClient(),
                 $cliente->getEmailClient(), 
+                
                 $cliente->getPhoneClient(), 
-                $cliente->getAddressClient(), 
+                
             );
         }
             return $this->render('clientes/index.html.twig', [
@@ -49,8 +50,19 @@ class ClientesController extends AbstractController
      * @Route("/clientes/show/{id}", name="showClientes")
      */
 
-     public function show(){
-         return $this->render('clientes/show.html.twig');
+     public function show($id){
+
+        $cliente = $this->getDoctrine()
+        ->getRepository(Clientes::class)
+        ->findOneBy([
+            'id' => $id
+        ]);
+
+        return $this->render('clientes/show.html.twig',  [
+            'name' => $cliente->getNameClient(),
+            'email' => $cliente->getEmailClient(), 
+            'phone' => $cliente->getPhoneClient(),
+        ]);
      }
 
      /**

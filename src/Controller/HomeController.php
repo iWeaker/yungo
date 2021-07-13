@@ -50,7 +50,7 @@ class HomeController extends AbstractController
                 $user->getNameClient(),
                 $user->getEmailClient(), 
                 $user->getPhoneClient(), 
-                $user->getAddressClient(), 
+               
             );
         }
         
