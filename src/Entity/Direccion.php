@@ -34,6 +34,17 @@ class Direccion
      */
     private $clientes;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Sitios::class, cascade={"persist", "remove"})
+     */
+    private $fkZone;
+
+    /**
+     * @ORM\OneToOne(targetEntity=Inventario::class, cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $fkInventary;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -71,6 +82,30 @@ class Direccion
     public function setClientes(?Clientes $clientes): self
     {
         $this->clientes = $clientes;
+
+        return $this;
+    }
+
+    public function getFkZone(): ?Sitios
+    {
+        return $this->fkZone;
+    }
+
+    public function setFkZone(?Sitios $fkZone): self
+    {
+        $this->fkZone = $fkZone;
+
+        return $this;
+    }
+
+    public function getFkInventary(): ?Inventario
+    {
+        return $this->fkInventary;
+    }
+
+    public function setFkInventary(Inventario $fkInventary): self
+    {
+        $this->fkInventary = $fkInventary;
 
         return $this;
     }

@@ -25,8 +25,7 @@ class ClientesController extends AbstractController
             $response[] = array(
                 $cliente->getId(),
                 $cliente->getNameClient(),
-                $cliente->getEmailClient(), 
-                
+                $cliente->getEmailClient(),   
                 $cliente->getPhoneClient(), 
                 
             );
@@ -59,17 +58,38 @@ class ClientesController extends AbstractController
         ]);
 
         return $this->render('clientes/show.html.twig',  [
+            'id' => $cliente->getId(),
             'name' => $cliente->getNameClient(),
             'email' => $cliente->getEmailClient(), 
             'phone' => $cliente->getPhoneClient(),
+            'address' => $cliente->getFkAddress(), 
+            
         ]);
      }
 
      /**
-     * @Route("/clientes/edit/{id}", name="editClientes")
+     * @Route("/clientes/editPersonal/{id}", name="editClientesPersonal")
      */
 
-    public function edit(){
-        return $this->render('clientes/edit.html.twig');
+    public function editPersonal($id){
+        $response = array(
+            'status' => "",
+            'message' =>  $this->renderView('clientes/editPersonal.html.twig' , ['id' => $id])
+        );
+        return $this->json($response);
+        
+    }
+
+    /**
+     * @Route("/clientes/editAddress/{id}", name="editClientesAddress")
+     */
+
+    public function editAddress($id){
+        $response = array(
+            'status' => "",
+            'message' =>  $this->renderView('clientes/editAddress.html.twig' , ['id' => $id])
+        );
+        return $this->json($response);
+        
     }
 }

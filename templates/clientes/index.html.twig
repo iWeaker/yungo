@@ -52,8 +52,8 @@ $(document).ready(function() {
             "data": null,
             "width": 300,
             "defaultContent": "<button id='view' class='view bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>Mostrar</button>"+
-                               "<button id='edit' class='view bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' style='margin-left:6px'>Editar</button>"+
-                               "<button id='delete' class='view bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded' style='margin-left:6px'>Eliminar</button>"
+                              
+                              "<button id='delete' class='view bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded' style='margin-left:6px'>Eliminar</button>"
         } ]
         
     } );
@@ -62,8 +62,6 @@ $(document).ready(function() {
         var data = table.row( $(this).parents('tr') ).data();
         if (action=='view')
         window.location.href = "/clientes/show/"+data[0];
-        if(action == 'edit')
-        window.location.href = "/clientes/edit/"+data[0];
         if(action == 'delete')
         window.location.href = "/clientes/delete/"+data[0];
         
