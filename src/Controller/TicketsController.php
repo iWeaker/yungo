@@ -52,6 +52,13 @@ class TicketsController extends AbstractController
      * 
      */
     public function show($id){
-        return $this->render('tickets/show.html.twig');
+        $tickets = $this->getDoctrine()
+        ->getRepository(Ticket::class)
+        ->findOneBy([
+            'id' => $id
+        ]);
+        return $this->render('tickets/show.html.twig' , [
+            'ticket' => $tickets
+        ]);
     }
 }

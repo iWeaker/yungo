@@ -6,7 +6,7 @@
   height: 100%;
   z-index: 901;
   overflow-y: auto;
-  background: radial-gradient(at center, rgba(255, 255, 255, 0.84) 0%, rgba(255, 255, 255, 0.96) 100%);
+  background: radial-gradient(at center, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.16) 100%);
   -webkit-transform: translate3D(0, 0, 0);
   -webkit-perspective: 500px;
   opacity: 0;

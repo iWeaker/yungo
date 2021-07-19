@@ -199,6 +199,9 @@
             ".env"
         ]
     },
+    "symfony/form": {
+        "version": "v5.3.3"
+    },
     "symfony/framework-bundle": {
         "version": "5.3",
         "recipe": {
@@ -243,6 +246,9 @@
         "version": "v2.1.0"
     },
     "symfony/polyfill-intl-grapheme": {
+        "version": "v1.23.0"
+    },
+    "symfony/polyfill-intl-icu": {
         "version": "v1.23.0"
     },
     "symfony/polyfill-intl-normalizer": {

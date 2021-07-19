@@ -50,6 +50,12 @@ class Ticket
      */
     private $comentarios;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Direccion::class, cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $fkAddress;
+
     public function __construct()
     {
         $this->comentarios = new ArrayCollection();
@@ -146,6 +152,18 @@ class Ticket
                 $comentario->setFkTicket(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getFkAddress(): ?Direccion
+    {
+        return $this->fkAddress;
+    }
+
+    public function setFkAddress(Direccion $fkAddress): self
+    {
+        $this->fkAddress = $fkAddress;
 
         return $this;
     }

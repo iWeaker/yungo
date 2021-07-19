@@ -1,1 +1,38 @@
-{{ id }}
+<div class="w-full max-w-lg" style="margin:0 auto">
+{{ form_start(form, {'attr': {'class': 'bg-white  rounded px-8 pt-6 pb-8 mb-4', 'id': 'form-address'}}) }}
+
+  <div class="flex flex-wrap -mx-3 mb-6">
+    <div class="w-full px-3">
+      <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
+        Domicilio
+      </label>
+      {{ form_row(form.name_address, { 'value': address , 'attr': {'class': 'appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500'}}) }}
+    </div> 
+    <div class="w-full px-3">
+      <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
+        Sitio conectado
+      </label>
+      {{ form_row(form.fkZone, { 'value': idzona, 'attr': {'class': 'appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500'}}) }}
+    </div> 
+    <div class="w-full px-3" style="margin-bottom:10px">
+      <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
+        Paquete
+      </label>
+      {{ form_row(form.fkPacket, { 'value': idpaquete ,'attr': {'class': 'appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500'}}) }}
+    </div>
+    <div class="w-full px-3" style="margin-bottom:10px">
+      <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
+        Equipo (Mac)
+      </label>
+     
+      {% if idinventario is not null %}
+        {{ form_row(form.fkInventary, { 'value': idinventario ,'attr': {'class': 'appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500'}}) }}
+      {% endif %}
+      
+    </div>
+    <div class="w-full px-3">
+       {{ form_row(form.submit_address, { 'label':'Actualizar' , 'attr': {'class': 'w-full px-3 shadow bg-green-500 hover:bg-green-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded'}}) }}
+    </div>
+  </div>
+{{ form_end(form) }}
+</div>

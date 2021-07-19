@@ -3,28 +3,30 @@
 {% block title %}Hello InventarioController!{% endblock %}
 
 {% block body %}
-<div class="pageHeader">
-    <div class="overflow-hidden flex flex-shrink p-4 md:flex-shrink-0">
-        <div class="flex space-x-2 box-border ">
-            <p class="font-sans text-xl">Inventario</p>
-            <form action="/inventario/create">
-                <input type="submit"  value="+"class="bg-blue-500 hover:bg-blue-700 text-white py-1 px-3 rounded focus:ring-2">
-            </form>
-        </div>
-    </div>
+<div class="overflow-hidden flex flex-shrink p-4 md:flex-shrink-0">
+  <div style="width:1320px; margin:0 auto; ">
+    <span style="font-size:38px;font-family: "Gill Sans Extrabold", Helvetica, sans-serif">Inventario</span>
+  </div>
 </div>
-<div class= "overflow-hidden flex items-center justify-center">
-    <div class="flex items-center justify-center">
+<div class= "overflow-hidden flex items-center justify-center" >
+    <div class="shadow overflow-hidden sm:rounded-md bg-white" style="margin-top:3px;margin-bottom:3px;padding:10px">
         <div class="inset-x-0 bottom-0">
-             <table id="tabla-inventario" class="">
+           <div style="position:absolute;z-index:1">
+            <a href="/inventario/create">
+              <button class="hover:bg-green-400 bg-green-500 text-white font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded">
+                  nuevo inventario
+              </button>
+            </a>
+           </div>
+           <table id="tabla-inventario" class="">
                 <thead class="text-white">
-                    <tr class="bg-teal-400 flex flex-col flex-no wrap sm:table-row rounded-l-lg sm:rounded-none mb-2 sm:mb-0">
+                    <tr style=" background-color:#1DABE0" class="block text-sm font-medium  bold flex flex-col flex-no wrap sm:table-row rounded-l-lg sm:rounded-none mb-2 sm:mb-0">
                         <th class="p-3 text-left"></th>
                         <th class="p-3 text-left"></th>
                         <th class="p-3 text-left"></th>
-                        <th class="p-3 text-left"></th>
-                        <th class="p-3 text-left"></th>
-                        <th class="p-3 text-left"></th>
+                        <th class="p-3 text-left"></th> 
+                        <th class="p-3 text-left"></th> 
+                        <th class="p-3 text-left"></th> 
                     </tr>  
                 </thead>
             </table>
@@ -41,13 +43,20 @@ $(document).ready(function() {
         "bFilter": true,
         "bInfo": false,
         "bAutoWidth": false ,
+        language: {
+          'paginate': {
+            'previous': '<button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r rounded-l">Prev</button>',
+            'next':'<button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r rounded-l">Next</button>'
+          },
+          searchPlaceholder: "Buscar...",
+        },
         columns: [
-            { title: "Identificacion", "width":100 },
-            { title: "Mac", "width":200 },
-            { title: "Modelo", "width":200 },
+            { title: "#", "width":100 },
+            { title: "Mac", "width":300 },
+            { title: "Modelo", "width":300 },
             { title: "Marca", "width":100 },
             { title: "Tipo", "width":200 },
-            { title: "Acciones", "width":300}, 
+            { title: "", "width":300}, 
            
         ], 
         "columnDefs": [ {
@@ -66,6 +75,10 @@ $(document).ready(function() {
         if(action == 'edit')
         window.location.href = "/inventario/edit/"+data[0];
     } );
+    var input = $('#tabla-inventario_filter label input');
+    $("#tabla-inventario_filter label").html('');
+    $("#tabla-inventario_filter label").append(input);
+   
 } );
 </script>
 <style>
@@ -74,7 +87,7 @@ $(document).ready(function() {
       height: 100%;
     }
      #tabla-inventario_wrapper{
-      max-width:920px
+      max-width:1320px
     }
     @media (min-width: 640px) {
       table {
@@ -92,6 +105,14 @@ $(document).ready(function() {
   
     th:not(:last-child) {
       border-bottom: 2px solid rgba(0, 0, 0, .1);
+    }
+    #tabla-inventario_filter{
+      margin-bottom:10px;
+    }
+    #tabla-inventario_filter input{
+      border-radius:10px;
+      background-color:#FaFaFa; 
+      padding:10px;
     }
   </style>
 {% endblock %}

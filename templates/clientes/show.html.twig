@@ -11,19 +11,19 @@
                     <div class="grid grid-cols-6 gap-6">
                         <div class="col-span-6 sm:col-span-3">
                             <label for="nombre" class="block text-sm font-medium text-gray-700 bold">Nombre Completo:</label>
-                            <p class="font-bold">{{ name }}</p>
+                            <p id="name-show" class="font-bold">{{ name }}</p>
                         </div>
                         <div class="col-span-6 sm:col-span-3">
                             <label for="email" class="block text-sm font-medium text-gray-700 bold">Email:</label>
-                            <p class="font-bold">{{ email }}</p>
+                            <p id="email-show" class="font-bold">{{ email }}</p>
                         </div>
                         
                         <div class="col-span-6 sm:col-span-3">
                             <label for="telefono" class="block text-sm font-medium text-gray-700 bold">Telefono:</label>
-                            <p class="font-bold">{{ phone }}</p>
+                            <p id="phone-show" class="font-bold">{{ phone }}</p>
                         </div>
                         <div class="col-span-6 sm:col-span-3">
-                            <a onclick="personalEdit()" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 border border-green-700 rounded">Editar</a>
+                            <a style="cursor:pointer" onclick="personalEdit()" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 border border-green-700 rounded">Editar</a>
                         </div>
                     </div>
                 </div>
@@ -58,8 +58,9 @@
                                         <p class="font-bold text-cool-gray-500">Sin asignar</p>
                                     {% endif %}
                                 </div>
-                                <div class="col-span-6 sm:col-span-1">
-                                    <a  onclick="" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 border border-green-700 rounded">Editar</a>
+                                <div class="col-span-6 sm:col-span-1" >
+                                    <a style="cursor:pointer" onclick="addressEdit('{{ad.getId}}')" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 border border-green-700 rounded">Editar</a>
+                                    <a style="cursor:pointer" onclick="addressEdit('{{ad.getId}}')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 border border-red-700 rounded">Eliminar</a>
                                 </div>
                             </div>
                            {% endfor %}
@@ -68,49 +69,47 @@
                 </div>
             </div>
             <div class="md:grid md:grid-cols-5 md:gap-0 md:mt-5">
-                <p class="text-center mt-1 font-mono text-xl font-bold relative grid col-start-2 col-end-4 row-start-1 left-15">Tickets Registrados</p>
-                <div class= "md:mt-0 md:col-start-1 col-end-6" style="background: #edf2f7;">
-                    <div class="shadow overflow-y-auto sm:rounded-m">
+                <p class="text-center mt-1 font-mono text-xl font-bold relative grid col-start-2 col-end-5 row-start-1 left-15">Tickets Registrados</p>
+                <div class= "md:mt-0 md:col-start-1 col-end-6" >
+                    <div class="shadow overflow-hidden sm:rounded-md">
                         <div class="inset-x-0 bottom-0">
-                            @if(count($ticket)>=1)
-                            <table class="w-full flex flex-row flex-no-wrap sm:bg-white rounded-lg overflow-hidden sm:shadow-lg my-5">
+                          
+                           {% if ticket is not empty %}
+                            <table class="w-full flex flex-row flex-no-wrap sm:bg-white  overflow-hidden  ">
                                 <thead class="text-white">
-                                @foreach ($ticket as $tick)  
                                     <tr class="bg-teal-400 flex flex-col flex-no wrap sm:table-row rounded-l-lg sm:rounded-none mb-2 sm:mb-0">
                                         <th class="p-2 text-center">Id</th>
+                                        <th class="p-2 text-center">Direccion</th>
                                         <th class="p-2 text-center">Fecha</th>
                                         <th class="p-2 text-center">Descripcion</th>
                                         <th class="p-2 text-center">Estado</th>
                                         <th class="p-2 text-left" width="110px" >Problematica</th>
                                     </tr>
-                                @endforeach
                                 </thead>
                                 <tbody class="flex-1 sm:flex-none">
-                                @foreach ($ticket as $tick)
+                                {% for tick in ticket %}
+                                
                                     <tr class="flex flex-col flex-no wrap sm:table-row mb-3 sm:mb-0">
-                                        <td class="border-grey-light border hover:bg-gray-100 p-2 truncate text-sm">IDTICKET</td>
-                                        <td class="border-grey-light border hover:bg-gray-100 p-2 truncate text-sm">TICKETFECHA</td>
-                                        <td class="border-grey-light border hover:bg-gray-100 p-2  text-sm">TICKETDESCRIPCION</td>
-                                        @switch($tick->estado)
-                                            @case('Nuevo')
+                                        <td class="border-grey-light border hover:bg-gray-100 p-2 truncate text-sm">{{ tick.getId }}</td>
+                                        <td class="border-grey-light border hover:bg-gray-100 p-2 truncate text-sm">{{ tick.getFkAddress.getNameAddress }}</td>
+                                        <td class="border-grey-light border hover:bg-gray-100 p-2 truncate text-sm">{{ tick.getDateTicket|date('Y-m-d')  }}</td>
+                                        <td class="border-grey-light border hover:bg-gray-100 p-2  text-sm">{{ tick.getDescTicket }}</td>
+                                       {% if tick.getStatusTicket == 'Nuevo' %}
                                         <td class="border-grey-light border hover:bg-gray-100 p-2 truncate text-sm"><span class='text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-green-600 bg-green-200 last:mr-0 mr-1'>Nuevo</span></td>
-                                                @break
-                                            @case('Abierto')
+                                            {% elseif tick.getStatusTicket == 'Abierto' %}
                                         <td class="border-grey-light border hover:bg-gray-100 p-2 truncate text-sm"><span class='text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-yellow-600 bg-yellow-200 last:mr-0 mr-1'>Abierto</span></td>
-                                                @break
-                                            @case('Resuelto')
+                                             {% elseif tick.getStatusTicket == 'Cerrado' %}
                                         <td class="border-grey-light border hover:bg-gray-100 p-2 truncate text-sm"><span class='text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-gray-600 bg-gray-200 last:mr-0 mr-1'>Resuelto</span></td>
-                                                @break
-                                            @default     
-                                        @endswitch
+                                                  
+                                        {% endif %}
                                         <td class="border-grey-light border hover:bg-gray-100 p-2 text-red-400 hover:text-red-600 hover:font-medium cursor-pointer text-sm"><a href="/tickets/TICKETID">TICKET TIPO DE PROBLEMA</a></td>
                                     </tr>
-                                @endforeach   
+                                {% endfor %}
                                 </tbody>  
                              </table>
-                                @else
+                               {% else %}
                             <p class="font-bold text-green-600 text-center text-lg p-7">No cuenta con tickets registrados</p>
-                                @endif 
+                               {% endif %}
                         </div>
                     </div>
                 </div>
@@ -128,6 +127,21 @@ function personalEdit() {
                     $.sweetModal({
                         title: 'Editar datos personales',
                         content: response.message,
+                        width: '500px',
+                    });
+                },
+            });
+        }
+function addressEdit(address) {
+            $.ajax({
+                type: 'POST',
+                url: '/clientes/editAddress/'+address,
+                dataType: 'json',
+                success: function(response) {
+                    $.sweetModal({
+                        title: 'Editar direccion',
+                        content: response.message,
+                         width: '500px',
                     });
                 },
             });
@@ -153,5 +167,6 @@ function personalEdit() {
             th:not(:last-child) {
         border-bottom: 2px solid rgba(0, 0, 0, .1);
         }
+        
     </style>
 {% endblock %}

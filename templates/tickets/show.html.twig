@@ -10,38 +10,36 @@
                     <div class="grid grid-cols-6 gap-6">
                         <div class="col-span-2">
                             <label for="nombre" class="block text-sm font-medium text-gray-700 bold">Cliente:</label>
-                            <p class="font-bold">name</p>
+                            <p class="font-bold">{{ ticket.getFkClient.getNameClient }}</p>
                         </div>
                         
                         <div class="col-span-1">
                             <label for="email" class="block text-sm font-medium text-gray-700 bold">No.ticket:</label>
-                            <p class="font-bold">idTicket</p>
+                            <p class="font-bold">{{ ticket.getId }}</p>
                         </div>
 
                         <div class="col-span-3">
                             <label for="domicilio" class="block text-sm font-medium text-gray-700 bold">Tipo de Problema:</label>
-                            <p class="font-bold">TipoProblema</p>
+                            <p class="font-bold">{{ ticket.typeTicket }}</p>
                         </div>
 
                         <div class="col-span-6">
                             <label for="telefono" class="block text-sm font-medium text-gray-700 bold">Descripcion:</label>
-                            <p class="font-bold">Descripcion</p>
+                            <p class="font-bold">{{ ticket.getDescTicket }}</p>
                         </div>
 
                         <div class="col-span-6">
                             <label for="sitios" class="block text-sm font-medium text-gray-700 bold">Estado del ticket</label>
                             <select id="estado" name="estado" autocomplete="country" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                               
-                                <option value="ESTADO" selected>ESTADO [Estado actual]</option>
                                 <option value="Abierto">Abierto</option>
                                 <option value="Nuevo">Nuevo</option>
-                                <option value="Resuelto">Resuelto</option>
+                                <option value="Resuelto">Cerrado</option>
                             </select>
                         </div>
 
                         <div class="col-span-6 sm:col-span-3">
                             <label for="paquete" class="block text-sm font-medium text-gray-700 bold">Fecha Registrada</label>
-                            <p class="font-bold">Fecha</p>
+                            <p class="font-bold">{{ ticket.getDateTicket|date('Y-m-d')  }}</p>
                         </div>
                         
                         <div class="col-span-3 self-center justify-self-center">
