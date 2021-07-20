@@ -6,9 +6,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Inventario;
+use App\Form\NewInventaryType;
 use Omines\DataTablesBundle\Adapter\Doctrine\ORMAdapter;
 use Omines\DataTablesBundle\Column\TextColumn;
 use Omines\DataTablesBundle\Adapter\ArrayAdapter;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Omines\DataTablesBundle\DataTableFactory;
 
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,23 +25,24 @@ class InventarioController extends AbstractController
      */
     public function index(Request $request, DataTableFactory $dataTableFactory): Response
     {
-        $clientes = $this->getDoctrine()
+        $inventario = $this->getDoctrine()
         ->getRepository(Inventario::class)
         ->findAll();
     
         $response = array();
-        foreach ($clientes as $cliente) {
+        foreach ($inventario as $inv) {
             $response[] = array(
-                $cliente->getId(),
-                $cliente->getMacInventory(),
-                $cliente->getModelInventory(), 
-                $cliente->getBrandInventory(), 
-                $cliente->getTypeInventory(), 
+                $inv->getId(),
+                $inv->getMacInventory(),
+                $inv->getModelInventory(), 
+                $inv->getBrandInventory(), 
+                $inv->getTypeInventory(), 
             );
         }
         
             return $this->render('inventario/index.html.twig', [
             'response' => json_encode($response),
+            'button' => '<button>hola</button>',
         ]);
     }
 
@@ -48,8 +51,42 @@ class InventarioController extends AbstractController
      *
      * 
      */
-    public function create(){
-        return $this->render('inventario/create.html.twig');
+    public function create(Request $request){
+        
+
+        $form = $this->createForm(NewInventaryType::class, new Inventario);
+        $form->handleRequest($request); 
+        if($form->isSubmitted() && $form->isValid()){
+            $entityManager = $this->getDoctrine()->getManager();
+            
+            $brand = $form['brand_inventory']->getData(); 
+            $model = $form['model_inventory']->getData(); 
+            $mac   = $form['mac_inventory']->getData();
+            $type  = $form['type_inventory']->getData(); 
+            if($brand == null || $model == null || $mac == null || $type == null){
+                $error = "Error de ambos";
+            }else{
+                $in = new Inventario();
+                $in->setMacInventory($mac);
+                $in->setTypeInventory($type);
+                $in->setModelInventory($model); 
+                $in->setBrandInventory($brand); 
+                $entityManager->persist($in);
+                try{
+                    $entityManager->flush();
+                    return new JsonResponse(array(
+                        'status' => true,
+                        'msg' => 'Se ha registrado con exito!'
+                    ));
+                }catch(\Exception $e) {
+                    $message = $e->getMessage();
+                }
+
+            }
+        }
+        return $this->render('inventario/create.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 
     /**

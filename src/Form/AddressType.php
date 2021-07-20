@@ -44,11 +44,10 @@ class AddressType extends AbstractType
             ])
             ->add('fkInventary', EntityType::class, [
                 'class' => Inventario::class,
-                
                 'query_builder' => function (InventarioRepository $er) {
                     return $er->createQueryBuilder('b')
                         ->orderBy('b.mac_inventory', 'ASC');
-                        
+                    
                 },
                 'choice_label' => 'mac_inventory',
                 'label' => false

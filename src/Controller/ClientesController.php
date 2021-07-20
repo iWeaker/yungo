@@ -6,6 +6,7 @@ use App\Entity\Clientes;
 use App\Entity\Direccion;
 use App\Form\ClientType;
 use App\Form\AddressType;
+use App\Form\NewClientType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,8 +44,10 @@ class ClientesController extends AbstractController
      */
     public function create(): Response
     {
+        $form = $this->createForm(NewClientType::class, new Clientes);
         return $this->render('clientes/create.html.twig', [
             'controller_name' => 'ClientesController',
+            'form' => $form->createView()
         ]);
     }
 

@@ -6,6 +6,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Ticket;
+use App\Form\NewTicketType;
+use Symfony\Component\HttpFoundation\Request;
 
 class TicketsController extends AbstractController
 {
@@ -37,11 +39,13 @@ class TicketsController extends AbstractController
      /**
      * @Route("/tickets/create", name="createTickets")
      */
-    public function create(): Response
+    public function create(Request $request): Response
     {
-        
+        $form = $this->createForm(NewTicketType::class, new Ticket);
+        $form->handleRequest($request);
         return $this->render('tickets/create.html.twig', [
             'controller_name' => 'TicketsController',
+            'form' => $form->createView()
         ]);
     }
 

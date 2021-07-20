@@ -60,7 +60,11 @@
       </div>
     </div>
   </div>
-  
+  <div>
+    {{ form_start(form) }}
+    {{ form_end(form) }}
+  </div>
+
   <script>
     $(document).ready(function(){
       $("form").submit(function(){
