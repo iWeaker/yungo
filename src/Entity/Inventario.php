@@ -37,6 +37,13 @@ class Inventario
      */
     private $type_inventory;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Servicio::class, mappedBy="fkInventary", cascade={"persist", "remove"})
+     */
+    private $servicio;
+
+    
+
     public function getId(): ?int
     {
         return $this->id;
@@ -90,4 +97,23 @@ class Inventario
 
         return $this;
     }
+
+    public function getServicio(): ?Servicio
+    {
+        return $this->servicio;
+    }
+
+    public function setServicio(Servicio $servicio): self
+    {
+        // set the owning side of the relation if necessary
+        if ($servicio->getFkInventary() !== $this) {
+            $servicio->setFkInventary($this);
+        }
+
+        $this->servicio = $servicio;
+
+        return $this;
+    }
+    
+   
 }

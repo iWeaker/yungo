@@ -32,6 +32,8 @@ class Paquete
      */
     private $price_packet;
 
+    
+
     public function getId(): ?int
     {
         return $this->id;
@@ -72,4 +74,6 @@ class Paquete
 
         return $this;
     }
+
+    
 }

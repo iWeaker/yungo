@@ -1,0 +1,21 @@
+<div class="w-full max-w-lg" style="margin:0 auto">
+{{  form_start(form, {'attr': {'class': 'bg-white  rounded px-8 pt-6 pb-8 mb-4', 'id': 'form-service'}}) }}
+  <div class="flex flex-wrap -mx-3 mb-6">
+    <div class="w-full px-3" style="margin-bottom:7px">
+      <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
+        Paquete
+      </label>
+      {{ form_row(form.fkPacket, {'value': packet ,  'attr': {'class': 'appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500'}}) }}
+    </div>
+    <div class="w-full px-3" style="margin-bottom:7px">
+      <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
+        MAC
+      </label>
+      {{ form_row(form.fkInventary, {'value': mac,    'attr': {'class': 'appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500'}}) }}
+    </div>
+    <div class="w-full px-3">
+       {{ form_row(form.submit, { 'label':'Actualizar' , 'attr': {'class': 'w-full px-3 shadow bg-green-500 hover:bg-green-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded'}}) }}
+    </div>
+  </div>
+{{ form_end(form) }}
+</div>

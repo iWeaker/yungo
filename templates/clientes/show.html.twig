@@ -2,74 +2,77 @@
 
 
 {% block body %}
-<div class ="sm:mt-0 px-6">
-    <div class="md:grid md:grid-cols-5 md:gap-5 md:mt-5">
-        <p class="text-center mt-1 font-mono text-xl font-bold relative">Datos Personales</p>
-        <div class="md:mt-0 md:col-start-0 col-end-1">
-            <div class="shadow overflow-hidden sm:rounded-md">
-                <div class="px-4 py-5 bg-white sm:p-6">
-                    <div class="grid grid-cols-6 gap-6">
-                        <div class="col-span-6 sm:col-span-3">
-                            <label for="nombre" class="block text-sm font-medium text-gray-700 bold">Nombre Completo:</label>
-                            <p id="name-show" class="font-bold">{{ name }}</p>
-                        </div>
-                        <div class="col-span-6 sm:col-span-3">
-                            <label for="email" class="block text-sm font-medium text-gray-700 bold">Email:</label>
-                            <p id="email-show" class="font-bold">{{ email }}</p>
-                        </div>
-                        
-                        <div class="col-span-6 sm:col-span-3">
-                            <label for="telefono" class="block text-sm font-medium text-gray-700 bold">Telefono:</label>
-                            <p id="phone-show" class="font-bold">{{ phone }}</p>
-                        </div>
-                        <div class="col-span-6 sm:col-span-3">
-                            <a style="cursor:pointer" onclick="personalEdit()" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 border border-green-700 rounded">Editar</a>
+<div class ="sm:mt-0 px-6" style="padding-top:10px">
+    <div class="grid grid-cols-6 gap-6">
+            <div class="col-span-6 sm:col-span-2">
+                <p class="block uppercase tracking-wide text-gray-700 text-s font-bold mb-2">Datos Personales</p>
+                <div>
+                    <div class="shadow overflow-hidden sm:rounded-md">
+                        <div class="px-4 py-5 bg-white sm:p-6">
+                            <div class="grid grid-cols-6 gap-6">
+                                <div class="col-span-6 sm:col-span-6">
+                                    <label for="nombre" class="block text-sm font-medium text-gray-700 bold">Nombre Completo:</label>
+                                    <p id="name-show" class="font-bold">{{ name }}</p>
+                                </div>
+                                <div class="col-span-6 sm:col-span-6">
+                                    <label for="email" class="block text-sm font-medium text-gray-700 bold">Email:</label>
+                                    <p id="email-show" class="font-bold">{{ email }}</p>
+                                </div>
+                                
+                                <div class="col-span-6 sm:col-span-6">
+                                    <label for="telefono" class="block text-sm font-medium text-gray-700 bold">Telefono:</label>
+                                    <p id="phone-show" class="font-bold">{{ phone }}</p>
+                                </div>
+                                <div class="col-span-6 sm:col-span-6">
+                                    <a style="cursor:pointer" onclick="personalEdit()" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 border border-green-700 rounded">Editar</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="md:grid md:grid-cols-0 md:gap-0 md:mt-5">
-                <p class="text-center mt-1 font-mono text-xl font-bold relative">Direcciones</p>
-                <div class="md:mt-0 md:col-start-0 col-end-1">
+    
+            <div class="col-span-6 sm:col-span-4">
+                <p class="block uppercase tracking-wide text-gray-700 text-s font-bold mb-2">Servicios</p>
+                <div class="md:mt-0 md:col-start-1 col-end-6">
                     <div class="shadow overflow-hidden sm:rounded-md">
-                        <div class="px-4 py-5 bg-white sm:p-6">
+                        <div class="px-4 py-5 bg-white sm:p-8 "  style="height:290px">
                             <div class="grid grid-cols-5 gap-6">
-                                <label for="domicilio" class="block text-sm font-medium text-gray-700 bold">Domicilio:</label>
+                                <label for="domicilio" class="sm:col-span-2 block text-sm font-medium text-gray-700 bold">Domicilio</label>
                                 <label for="sitios" class="block text-sm font-medium text-gray-700 bold">Sitio Conectado</label>
-                                <label for="paquete" class="block text-sm font-medium text-gray-700 bold">Paquete</label>
-                                <label for="paquete" class="block text-sm font-medium text-gray-700 bold">MAC del Equipo</label>       
+                                <label for="paquete" class="block text-sm font-medium text-gray-700 bold"></label>
                             </div>
-                          {% for ad in address %}
-                            <div class="grid grid-cols-5 gap-6 bg-gray-100" style="padding:10px; margin-top:6px; min-height:50px; line-height:50px">
-                                <div class="col-span-6 sm:col-span-1">
-                                    
-                                    <p style="font-size:17px">{{ ad.getNameAddress }}</p>
+                            <div id="services-result" >
+                            {% for ad in address|slice(0,2) %}
+                                <div class="grid grid-cols-5 gap-6 " style="border-color:#F2F2F2;border-bottom-width:1px;padding:10px; margin-top:6px; min-height:50px; line-height:50px;">
+                                    <div class="col-span-6 sm:col-span-2">
+                                        
+                                        <p style="font-size:17px">{{ ad.getNameAddress }}</p>
+                                    </div>
+                                    <div class="col-span-6 sm:col-span-1">
+                                        <p >{{ ad.getFkZone.getZonePlace }}</p>
+                                    </div>
+                                    <div class="col-span-6 sm:col-span-1">
+                                    <a style="cursor:pointer" onclick="serviceEdit('{{ad.getId}}')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Servicios</a>
+                                    </div>
+                                    <div class="col-span-6 sm:col-span-1" >
+                                        <a style="cursor:pointer" onclick="addressEdit('{{ad.getId}}')" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4  border-green-700 rounded">Editar</a>
+                                        <a style="cursor:pointer" onclick="deleteEdit('{{ad.getId}}')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4  border-red-700 rounded">Eliminar</a>
+                                    </div>
                                 </div>
-                                <div class="col-span-6 sm:col-span-1">
-                                    <p >{{ ad.getFkZone.getZonePlace }}</p>
-                                </div>
-                                <div class="col-span-6 sm:col-span-1">
-                                    <p >{{ ad.getFkPacket.getNamePacket }}</p>
-                                </div>
-                                <div class="col-span-6 sm:col-span-1 ">
-                                    {% if ad.getFkInventary is not null  %}
-                                        <p class="font-bold">{{ ad.getFkInventary.getMacInventory }}</p>
-                                    {% else  %}
-                                        <p class="font-bold text-cool-gray-500">Sin asignar</p>
-                                    {% endif %}
-                                </div>
-                                <div class="col-span-6 sm:col-span-1" >
-                                    <a style="cursor:pointer" onclick="addressEdit('{{ad.getId}}')" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 border border-green-700 rounded">Editar</a>
-                                    <a style="cursor:pointer" onclick="addressEdit('{{ad.getId}}')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 border border-red-700 rounded">Eliminar</a>
-                                </div>
+                            {% endfor %}
+                           </div>
+                            <div style="text-align:center;height:60px; line-height:60px">
+                                <button>Mostrar todos ({{ address|length }})</button>
                             </div>
-                           {% endfor %}
                          </div>
                     </div>
                 </div>
             </div>
-            <div class="md:grid md:grid-cols-5 md:gap-0 md:mt-5">
-                <p class="text-center mt-1 font-mono text-xl font-bold relative grid col-start-2 col-end-5 row-start-1 left-15">Tickets Registrados</p>
+    </div>
+    <div class="grid grid-cols-6 gap-6" style="margin-top:20px">
+            <div class="col-span-6 sm:col-span-6">
+                <p class="block uppercase tracking-wide text-gray-700 text-s font-bold mb-2">Tickets Registrados</p>
                 <div class= "md:mt-0 md:col-start-1 col-end-6" >
                     <div class="shadow overflow-hidden sm:rounded-md">
                         <div class="inset-x-0 bottom-0">
@@ -114,11 +117,15 @@
                     </div>
                 </div>
             </div>
-        </div>
     </div>
-</div>
+ </div>
+<script>
+
+</script>
+
 <script >
-function personalEdit() {
+
+    function personalEdit() {
             $.ajax({
                 type: 'POST',
                 url: '{{ path('editClientesPersonal', {id : id })}}',
@@ -132,7 +139,7 @@ function personalEdit() {
                 },
             });
         }
-function addressEdit(address) {
+        function addressEdit(address) {
             $.ajax({
                 type: 'POST',
                 url: '/clientes/editAddress/'+address,
@@ -140,6 +147,20 @@ function addressEdit(address) {
                 success: function(response) {
                     $.sweetModal({
                         title: 'Editar direccion',
+                        content: response.message,
+                         width: '500px',
+                    });
+                },
+            });
+        }
+        function serviceEdit(service) {
+            $.ajax({
+                type: 'POST',
+                url: '/clientes/editService/'+service,
+                dataType: 'json',
+                success: function(response) {
+                    $.sweetModal({
+                        title: 'Servicios',
                         content: response.message,
                          width: '500px',
                     });
@@ -166,6 +187,9 @@ function addressEdit(address) {
         }
             th:not(:last-child) {
         border-bottom: 2px solid rgba(0, 0, 0, .1);
+        }
+        #services-result div:last-child{
+            border:0px !important;
         }
         
     </style>

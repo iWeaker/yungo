@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\DireccionRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -23,12 +25,6 @@ class Direccion
     private $name_address;
 
     /**
-     * @ORM\OneToOne(targetEntity=Paquete::class, cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $fkPacket;
-
-    /**
      * @ORM\ManyToOne(targetEntity=Clientes::class, inversedBy="fkAddress")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -39,11 +35,16 @@ class Direccion
      */
     private $fkZone;
 
+
     /**
-     * @ORM\OneToOne(targetEntity=Inventario::class, cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\OneToMany(targetEntity=Servicio::class, mappedBy="fkAddress")
      */
-    private $fkInventary;
+    private $servicios;
+
+    public function __construct()
+    {
+        $this->servicios = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -62,17 +63,7 @@ class Direccion
         return $this;
     }
 
-    public function getFkPacket(): ?Paquete
-    {
-        return $this->fkPacket;
-    }
 
-    public function setFkPacket(Paquete $fkPacket): self
-    {
-        $this->fkPacket = $fkPacket;
-
-        return $this;
-    }
 
     public function getClientes(): ?Clientes
     {
@@ -98,14 +89,33 @@ class Direccion
         return $this;
     }
 
-    public function getFkInventary(): ?Inventario
+
+    /**
+     * @return Collection|Servicio[]
+     */
+    public function getServicios(): Collection
     {
-        return $this->fkInventary;
+        return $this->servicios;
     }
 
-    public function setFkInventary(Inventario $fkInventary): self
+    public function addServicio(Servicio $servicio): self
     {
-        $this->fkInventary = $fkInventary;
+        if (!$this->servicios->contains($servicio)) {
+            $this->servicios[] = $servicio;
+            $servicio->setFkAddress($this);
+        }
+
+        return $this;
+    }
+
+    public function removeServicio(Servicio $servicio): self
+    {
+        if ($this->servicios->removeElement($servicio)) {
+            // set the owning side to null (unless already changed)
+            if ($servicio->getFkAddress() === $this) {
+                $servicio->setFkAddress(null);
+            }
+        }
 
         return $this;
     }

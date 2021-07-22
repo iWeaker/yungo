@@ -33,7 +33,7 @@ class AddressType extends AbstractType
                 'choice_label' => 'zone_place',
                 'label' => false
             ])
-            ->add('fkPacket', EntityType::class, [
+            /*->add('fkPacket', EntityType::class, [
                 'class' => Paquete::class,
                 'query_builder' => function (PaqueteRepository $err) {
                     return $err->createQueryBuilder('a')
@@ -51,7 +51,7 @@ class AddressType extends AbstractType
                 },
                 'choice_label' => 'mac_inventory',
                 'label' => false
-            ])
+            ])*/
             ->add('submit_address', SubmitType::class);
     }
 
