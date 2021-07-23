@@ -6,6 +6,7 @@ use App\Entity\Clientes;
 use App\Entity\Direccion;
 use App\Entity\Servicio;
 use App\Entity\Sitios;
+use App\Entity\Ticket;
 use App\Form\ClientType;
 use App\Form\AddressType;
 use App\Form\NewClientType;
@@ -47,9 +48,25 @@ class ClientesController extends AbstractController
     /**
      * @Route("/clientes/create", name="createClientes")
      */
-    public function create(): Response
+    public function create(Request $request): Response
     {
         $form = $this->createForm(NewClientType::class, new Clientes);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            $name = $form['name_client']->getData();
+            $email = $form['email_client']->getData();
+            $phone = $form['phone_client']->getData();
+            $address = $form['fkAddress']->getData();
+            $zone = $form['zone_place']->getData();
+            $packet = $form['name_packet']->getData();
+
+            if($name == null || $email == null || $phone == null || $address == null || $zone == null || $packet == null){
+
+            }else{
+                $client = new Clientes();
+
+            }
+        }
         return $this->render('clientes/create.html.twig', [
             'controller_name' => 'ClientesController',
             'form' => $form->createView()
@@ -193,6 +210,38 @@ class ClientesController extends AbstractController
         return $this->json($response);
     }
     /**
+     * @Route("/clientes/deleteAddress/{id}", name="deleteClientesAddress")
+     */
+    public function deleteAddress($id){
+        $direccion = $this->getDoctrine()
+            ->getRepository(Direccion::class)
+            ->findOneBy([
+                'id' => $id
+            ]);
+        $servicio = $this->getDoctrine()->getRepository(Servicio::class)
+            ->findMultiServices($id);
+        $ticket = $this->getDoctrine()->getRepository(Ticket::class)
+            ->findMultiTicket($id);
+        if($direccion != null){
+            $entityManager = $this->getDoctrine()->getManager();
+            /*foreach ($servicio as $service) {
+                $entityManager->remove($service);
+            }
+            foreach ($ticket as $t) {
+                $entityManager->remove($t);
+            }*/
+            $entityManager->remove($direccion);
+            $entityManager->flush();
+
+
+
+            return new JsonResponse([
+                'msg' => $id
+            ]);
+        }
+
+    }
+    /**
      * @Route("/clientes/editService/{id}", name="editClientesService")
      */
     public function editService($id){
@@ -214,21 +263,47 @@ class ClientesController extends AbstractController
     }
 
     /**
-     * @Route("/clientes/editServiceSpecific/{idService}/{inventory}", name="editClientesServiceSpecific")
+     * @Route("/clientes/editServiceSpecific/{idService}/{inventory}", name="editServiceSpecific")
      */
 
-    public function editServiceSpecific($idService, $inventory){
+    public function editServiceSpecific($idService, $inventory, Request $request){
         $servicio = $this->getDoctrine()->getRepository(Servicio::class)
             ->findOneBy([
                 'id' => $idService
             ]);
-        $form = $this->createForm(ServiceType::class, new Servicio(),[
-            'myid' => $inventory
-            ]);
+        $form = $this->createForm(ServiceType::class, new Servicio(),['myid' => $inventory]);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            $entityManager = $this->getDoctrine()->getManager();
+            $packet = $form['fkPacket']->getData();
+            $inventory = $form['fkInventary']->getData();
+            if($packet == null || $inventory == null){
+
+            }else{
+                $servicio->setFkPacket($packet);
+                $servicio->setFkInventary($inventory);
+                $entityManager->persist($servicio);
+                try{
+                    $entityManager->flush();
+                    return new JsonResponse([
+                        'status' => true
+                    ]);
+                }catch(\Exception $e) {
+                    $message = $e->getMessage();
+                    return new JsonResponse([
+                        'status' => false
+                    ]);
+                }
+
+            }
+
+
+        }
         $response = array(
             'status' => "",
             'message' =>  $this->renderView('clientes/editServiceSpecific.html.twig' , [
-                'id' => $idService,
+                'idService' => $idService,
+                'inventory' => $inventory,
                 'form' => $form->createView(),
                 'packet' => (string) $servicio->getFkPacket()->getId(),
                 'mac' => (string) $servicio->getFkInventary()->getId()

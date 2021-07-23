@@ -31,13 +31,13 @@ class Direccion
     private $clientes;
 
     /**
-     * @ORM\OneToOne(targetEntity=Sitios::class, cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=Sitios::class)
      */
     private $fkZone;
 
 
     /**
-     * @ORM\OneToMany(targetEntity=Servicio::class, mappedBy="fkAddress")
+     * @ORM\OneToMany(targetEntity=Servicio::class, mappedBy="fkAddress", cascade={"persist", "remove"})
      */
     private $servicios;
 

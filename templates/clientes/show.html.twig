@@ -167,6 +167,25 @@
                 },
             });
         }
+        function deleteEdit(domicilio){
+            $.sweetModal.confirm('Eliminacion', '¿Seguro de eliminar este domicilio?', function() {
+                $.ajax({
+                    type: 'POST',
+                    url: '/clientes/deleteAddress/'+domicilio,
+                    dataType: 'json',
+                    success: function(response){
+                        $.sweetModal({
+                            content: response.msg,
+                            icon: $.sweetModal.ICON_SUCCESS,
+
+                        });
+                    }
+                })
+            }, function (){
+
+            });
+
+        }
 </script>
     <style>
         html,

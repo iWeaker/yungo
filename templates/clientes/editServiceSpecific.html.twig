@@ -1,5 +1,45 @@
+<script>
+
+
+    $('#form-servicespecific').on("submit",function(event) {
+        dataform = new FormData(this);
+        event.preventDefault();
+        $.sweetModal.confirm('Confirmacion', '¿Seguro de la edicion?', function() {
+            $.ajax({
+                type: 'POST',
+                url: '{{ path('editServiceSpecific',  {idService: idService, inventory: inventory})}}',
+                processData: false,
+                contentType: false,
+                data: dataform,
+                dataType: 'json',
+                success: function(response) {
+                    if(response.status == true){
+
+                        $(".sweet-modal-close-link:last-child").click();
+                        $.sweetModal({
+                            content: 'Editado con exito.',
+                            icon: $.sweetModal.ICON_SUCCESS,
+
+                        });
+                    }else if(response.status == false){
+
+                    }
+                },
+            });
+        }, function() {
+            $.sweetModal({
+                content: 'Se ha negado los cambios',
+                icon: $.sweetModal.ICON_ERROR,
+            });
+
+        });
+
+    });
+</script>
+</script>
+
 <div class="w-full max-w-lg" style="margin:0 auto">
-{{  form_start(form, {'attr': {'class': 'bg-white  rounded px-8 pt-6 pb-8 mb-4', 'id': 'form-service'}}) }}
+{{  form_start(form, {'attr': {'class': 'bg-white  rounded px-8 pt-6 pb-8 mb-4', 'id': 'form-servicespecific'}}) }}
   <div class="flex flex-wrap -mx-3 mb-6">
     <div class="w-full px-3" style="margin-bottom:7px">
       <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">

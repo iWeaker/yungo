@@ -21,18 +21,18 @@ class Servicio
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Direccion::class, inversedBy="servicios")
+     * @ORM\ManyToOne(targetEntity=Direccion::class, inversedBy="servicios", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $fkAddress;
 
     /**
-     * @ORM\OneToOne(targetEntity=Paquete::class, cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=Paquete::class)
      */
     private $fkPacket;
 
     /**
-     * @ORM\OneToOne(targetEntity=Inventario::class, inversedBy="servicio", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=Inventario::class, inversedBy="servicio")
      * @ORM\JoinColumn(nullable=false)
      */
     private $fkInventary;

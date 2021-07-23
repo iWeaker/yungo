@@ -46,12 +46,12 @@ class Ticket
     private $fkClient;
 
     /**
-     * @ORM\OneToMany(targetEntity=Comentarios::class, mappedBy="fkTicket")
+     * @ORM\OneToMany(targetEntity=Comentarios::class, mappedBy="fkTicket", cascade={"persist", "remove"})
      */
     private $comentarios;
 
     /**
-     * @ORM\OneToOne(targetEntity=Direccion::class, cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=Direccion::class)
      * @ORM\JoinColumn(nullable=false)
      */
     private $fkAddress;
