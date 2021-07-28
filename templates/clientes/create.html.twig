@@ -2,46 +2,50 @@
 
 {% block body %}
 <div class=" sm:mt-0">
-     <div class="md:grid md:grid-cols-4 md:gap-6 md:mt-5">
+    <div class="md:grid md:grid-cols-4 md:gap-6 md:mt-5">
       <div class="md:mt-0 md:col-start-2 col-end-4">
-        <p class="block uppercase tracking-wide text-gray-700 text-s font-bold mb-2" style="">Nuevo Usuario</p>
+        <p class="block uppercase tracking-wide text-gray-700 text-s font-bold mb-2" style="">Nuevo Cliente</p>
       </div>
     </div>
     <div class="md:grid md:grid-cols-4 md:gap-6 md:mt-5">
       <div class="md:mt-0 md:col-start-2 col-end-4">
-         {{ form_start(form) }}
+         {{ form_start(form, {'attr': { 'id': 'create-form' }}) }}
           <div class="shadow overflow-hidden sm:rounded-md ">
             <div class="px-4 py-5 bg-white sm:p-6">
               <div class="grid grid-cols-6 gap-6">
                 <div class="col-span-6 ">
                   <label for="name_client" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">Nombre Completo</label>
-                  {{ form_row(form.name_client, {'attr':{ 'placeholder': 'Nombre completo' , 'class': 'appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500' }}) }}
+                  {{ form_row(form.name_client, {'attr':{ 'placeholder': 'Nombre completo' , 'class': 'appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none' }}) }}
                 </div>
                 <div class="col-span-6 sm:col-span-3">
                   <label for="email" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">Correo Electronico</label>
-                  {{ form_row(form.email_client, {'attr':{ 'placeholder': 'Correo electronico' , 'class': 'appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500' }}) }}
+                  {{ form_row(form.email_client, {'attr':{ 'placeholder': 'Correo electronico' , 'class': 'appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none' }}) }}
                 </div>
               <div class="col-span-6 sm:col-span-3 ">
                   <label for="telefono" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">Telefono</label>
-                  {{ form_row(form.phone_client, {'attr':{ 'placeholder': 'Telefono' , 'class': 'appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500' }}) }}
+                  {{ form_row(form.phone_client, {'attr':{ 'placeholder': 'Telefono' , 'class': 'appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none' }}) }}
                 </div>
                 <div class="col-span-6">
                   <label for="domicilio" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">Domicilio</label>
-                  {{ form_row(form.fkAddress, {'attr':{ 'placeholder': 'Direccion' , 'class': 'appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500' }}) }}
+                  {{ form_row(form.fkAddress, {'attr':{ 'placeholder': 'Direccion' , 'class': 'appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none ' }}) }}
                 </div>
-                <div class="col-span-6 sm:col-span-3">
+                <div class="col-span-6 sm:col-span-2">
                   <label for="sitios" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">Sitio</label>
-                   {{ form_row(form.zone_place, {'attr':{ 'placeholder': 'Direccion' , 'class': 'mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm' }}) }}
+                   {{ form_row(form.zone_place, {'attr':{ 'placeholder': 'Direccion' , 'class': 'appearance-none block w-full bg-gray-200 text-gray-700 rounded py-3 px-4 leading-tight' }}) }}
                 </div>
-              <div class="col-span-6 sm:col-span-6 lg:col-span-3">
+              <div class="col-span-6 sm:col-span-6 lg:col-span-2">
                 <label for="paquete" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">Paquete</label>
-                {{ form_row(form.name_packet, {'attr':{ 'placeholder': 'Direccion' , 'class': 'mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm' }}) }}
+                {{ form_row(form.name_packet, {'attr':{ 'placeholder': 'Direccion' , 'class': 'appearance-none block w-full bg-gray-200 text-gray-700 rounded py-3 px-4 leading-tight' }}) }}
               </div>
+                <div class="col-span-6 sm:col-span-6 lg:col-span-2">
+                  <label for="paquete" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">IP</label>
+                  {{ form_row(form.ip, {'attr':{ 'placeholder': 'IP' , 'class': 'appearance-none block w-full bg-gray-200 text-gray-700 rounded py-3 px-4 leading-tight' }}) }}
+                </div>
               </div>
             </div>
             <div class="px-4 py-3 bg-white text-right sm:px-6">
-              <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                Registrar
+              <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                Registrar cliente
               </button>
             </div>
           </div>
@@ -52,12 +56,35 @@
   
   <script>
     $(document).ready(function(){
-      $("form").submit(function(){
-        Swal.fire(
-          'Registrado!',
-          'Un cliente ha sido registrado con exito!',
-          'success'
-        )
+      $("form").submit(function(e){
+          e.preventDefault();
+          let form = new FormData(this);
+          $.ajax({
+              type: 'POST',
+              url: '{{ path('createClientes') }}',
+              processData: false,
+              contentType: false,
+              data: form,
+              dataType: 'json',
+              success: function(s){
+                if(s.status == true){
+                    $.sweetModal({
+                        content: s.msg,
+                        icon: $.sweetModal.ICON_SUCCESS,
+                        onClose: function(){
+                            window.location.href='/clientes'
+                        }
+                    });
+                }else{
+                    $.sweetModal({
+                        content: s.msg,
+                        icon: $.sweetModal.ICON_ERROR,
+
+                    });
+                }
+              }
+          });
+
       })
     });
   </script>

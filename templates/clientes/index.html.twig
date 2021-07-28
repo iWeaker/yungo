@@ -1,7 +1,5 @@
 {% extends 'base.html.twig' %}
-
-{% block title %}Hello ClientesController!{% endblock %}
-
+{% block title %}Clientes{% endblock %}
 {% block body %}
 <div class="overflow-hidden flex flex-shrink p-4 md:flex-shrink-0">
   <div style="width:1320px; margin:0 auto; ">
@@ -34,9 +32,8 @@
 </div>
 <script>
 $(document).ready(function() {
-    
-    var dataSet = "{{ response }}";  
-    var dataSetRemove = JSON.parse(dataSet.replace(/&quot;/g,'"')); 
+    var dataSet = "{{ response }}";
+    var dataSetRemove = JSON.parse(dataSet.replace(/&quot;/g,'"'));
     var table = $('#tabla-clientes').DataTable( {
         data: dataSetRemove,
         language: {
@@ -45,7 +42,6 @@ $(document).ready(function() {
             'next':'<button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r rounded-l">Next</button>'
           },
           searchPlaceholder: "Buscar...",
-          
         },
         "bLengthChange": false,
         "bFilter": true,
@@ -56,28 +52,51 @@ $(document).ready(function() {
             { title: "Nombre", "width":300},
             { title: "Correo", "width":100 },
             { title: "Telefono", "width":100 },
-            { title: "", "width":200}, 
-        ], 
+            { title: "", "width":200},
+        ],
         "columnDefs": [ {
             "targets": -1,
             "data": null,
             "width": 300,
-            "defaultContent": "<button id='view' class='view bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>Mostrar</button>"+  
+            "defaultContent": "<button id='view' class='view bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>Mostrar</button>"+
                               "<button id='delete' class='view bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded' style='margin-left:6px'>Eliminar</button>"
         } ]
-        
     } );
     var input = $('#tabla-clientes_filter label input');
     $("#tabla-clientes_filter label").html('');
     $("#tabla-clientes_filter label").append(input);
-    $('#tabla-clientes tbody').on( 'click','button', function () {
+    $('#tabla-clientes').on( 'click','button', function () {
         var action = this.id;
-        var data = table.row( $(this).parents('tr') ).data();
-        if (action=='view')
-        window.location.href = "/clientes/show/"+data[0];
-        if(action == 'delete')
-        window.location.href = "/clientes/delete/"+data[0];
-        
+        var is = $(this);
+        var row = table.row( is.parents('tr') );
+        var data = row.data();
+
+        if (action=='view'){
+            window.location.href = "/clientes/show/"+data[0];
+        }
+        if(action == 'delete'){
+            $.sweetModal.confirm('¿Seguro de eliminar?', function() {
+                $.ajax({
+                    type: 'POST',
+                    url: "/clientes/delete/"+data[0],
+                    dataType: 'json',
+                    success: function(a){
+                        if ($(row).hasClass('child')) {
+                            table.row($(row).prev('tr')).remove().draw();
+                        } else {
+                            table
+                                .row(is.parents('tr'))
+                                .remove()
+                                .draw();
+                        }
+                        $.sweetModal(a.msg);
+                    }
+                });
+                ;
+            }, function(){
+                $.sweetModal('Se ha cancelado la eliminacion');
+            });
+        }
     } );
 } );
 </script>
@@ -85,9 +104,6 @@ $(document).ready(function() {
     html,
     body {
       height: 100%;
-    }
-    #tabla-clientes_wrapper{
-      max-width:1320px
     }
     @media (min-width: 640px) {
       table {
@@ -98,22 +114,16 @@ $(document).ready(function() {
         display: none;
       }
     }
-  
     td:not(:last-child) {
       border-bottom: 0;
     }
-  
     th:not(:last-child) {
       border-bottom: 2px solid rgba(0, 0, 0, .1);
-    }
-    #tabla-clientes_filter{
-      margin-bottom:10px;
     }
     #tabla-clientes_filter input{
       border-radius:10px;
       background-color:#FaFaFa; 
       padding:10px;
     }
-    
   </style>
 {% endblock %}

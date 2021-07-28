@@ -37,6 +37,7 @@
                 <div class="md:mt-0 md:col-start-1 col-end-6">
                     <div class="shadow overflow-hidden sm:rounded-md">
                         <div class="px-4 py-5 bg-white sm:p-8 "  style="height:290px">
+
                             <div class="grid grid-cols-5 gap-6">
                                 <label for="domicilio" class="sm:col-span-2 block text-sm font-medium text-gray-700 bold">Domicilio</label>
                                 <label for="sitios" class="block text-sm font-medium text-gray-700 bold">Sitio Conectado</label>
@@ -44,13 +45,12 @@
                             </div>
                             <div id="services-result" >
                             {% for ad in address|slice(0,2) %}
-                                <div class="grid grid-cols-5 gap-6 " style="border-color:#F2F2F2;border-bottom-width:1px;padding:10px; margin-top:6px; min-height:50px; line-height:50px;">
-                                    <div class="col-span-6 sm:col-span-2">
-                                        
-                                        <p style="font-size:17px">{{ ad.getNameAddress }}</p>
+                                <div class="grid grid-cols-5 gap-6 " style="padding:10px; margin-top:6px; min-height:50px; line-height:50px;">
+                                    <div class="col-span-6 sm:col-span-2 ">
+                                        <p class="leading-loose" style="font-size:17px">{{ ad.getNameAddress }}</p>
                                     </div>
                                     <div class="col-span-6 sm:col-span-1">
-                                        <p >{{ ad.getFkZone.getZonePlace }}</p>
+                                        <p class="leading-loose" >{{ ad.getFkZone.getZonePlace }}</p>
                                     </div>
                                     <div class="col-span-6 sm:col-span-1">
                                     <a style="cursor:pointer" onclick="serviceEdit('{{ad.getId}}')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Servicios</a>
@@ -62,8 +62,13 @@
                                 </div>
                             {% endfor %}
                            </div>
-                            <div style="text-align:center;height:60px; line-height:60px">
-                                <button>Mostrar todos ({{ address|length }})</button>
+                            <div style=" text-align:center;height:60px; border-top-width: 1px; border-top-style: solid; padding-top:10px" >
+                                <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full" style="float:left">
+                                    Agregar direccion
+                                </button>
+                                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" style="float:right">
+                                    Mostrar todos ({{ address|length }})
+                                </button>
                             </div>
                          </div>
                     </div>
@@ -110,9 +115,9 @@
                                 {% endfor %}
                                 </tbody>  
                              </table>
-                               {% else %}
+                           {% else %}
                             <p class="font-bold text-green-600 text-center text-lg p-7">No cuenta con tickets registrados</p>
-                               {% endif %}
+                           {% endif %}
                         </div>
                     </div>
                 </div>
@@ -207,9 +212,7 @@
             th:not(:last-child) {
         border-bottom: 2px solid rgba(0, 0, 0, .1);
         }
-        #services-result div:last-child{
-            border:0px !important;
-        }
-        
+
+
     </style>
 {% endblock %}

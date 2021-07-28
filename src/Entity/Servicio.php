@@ -21,7 +21,7 @@ class Servicio
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Direccion::class, inversedBy="servicios", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity=Direccion::class, inversedBy="servicios")
      * @ORM\JoinColumn(nullable=false)
      */
     private $fkAddress;
@@ -33,9 +33,14 @@ class Servicio
 
     /**
      * @ORM\OneToOne(targetEntity=Inventario::class, inversedBy="servicio")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $fkInventary;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $ip_service;
 
     
 
@@ -76,6 +81,18 @@ class Servicio
     public function setFkInventary(Inventario $fkInventary): self
     {
         $this->fkInventary = $fkInventary;
+
+        return $this;
+    }
+
+    public function getIpService(): ?string
+    {
+        return $this->ip_service;
+    }
+
+    public function setIpService(string $ip_service): self
+    {
+        $this->ip_service = $ip_service;
 
         return $this;
     }

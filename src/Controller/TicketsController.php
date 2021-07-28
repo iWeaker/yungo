@@ -41,10 +41,9 @@ class TicketsController extends AbstractController
      */
     public function create(Request $request): Response
     {
-        $form = $this->createForm(NewTicketType::class, new Ticket);
+        $form = $this->createForm(NewTicketType::class, new Ticket());
         $form->handleRequest($request);
         return $this->render('tickets/create.html.twig', [
-            'controller_name' => 'TicketsController',
             'form' => $form->createView()
         ]);
     }

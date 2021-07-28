@@ -29,7 +29,8 @@ class NewClientType extends AbstractType
                 'label' => false
             ])
             ->add('fkAddress', TextType::class, [
-                'label' => false
+                'label' => false,
+                'mapped' => false,
             ])
             ->add('zone_place', EntityType::class, [
                 'class' => Sitios::class,
@@ -46,11 +47,16 @@ class NewClientType extends AbstractType
                 'mapped' => false,
                 'query_builder' => function (PaqueteRepository $er) {
                     return $er->createQueryBuilder('u')
-                        ->orderBy('u.name_packet', 'ASC');
+                        ->orderBy('u.id', 'ASC');
                 },
                 'choice_label' => 'name_packet',
                 'label' => false
             ])
+            ->add('ip', TextType::class, [
+                'mapped' => false,
+                'label'=> false
+            ])
+
         ;
     }
 

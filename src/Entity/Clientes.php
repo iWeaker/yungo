@@ -18,14 +18,10 @@ class Clientes
      * @ORM\Column(type="integer")
      */
     private $id;
-
-
-
     /**
      * @ORM\Column(type="string", length=150)
      */
     private $name_client;
-
     /**
      * @ORM\Column(type="string", length=255)
      */
@@ -35,16 +31,13 @@ class Clientes
      * @ORM\Column(type="string", length=20)
      */
     private $phone_client;
-
-
-
     /**
-     * @ORM\OneToMany(targetEntity=Ticket::class, mappedBy="fkClient")
+     * @ORM\OneToMany(targetEntity=Ticket::class, mappedBy="fkClient" , cascade={"persist", "remove"})
      */
     private $tickets;
 
     /**
-     * @ORM\OneToMany(targetEntity=Direccion::class, mappedBy="clientes")
+     * @ORM\OneToMany(targetEntity=Direccion::class, mappedBy="clientes" , cascade={"persist", "remove"})
      */
     private $fkAddress;
 

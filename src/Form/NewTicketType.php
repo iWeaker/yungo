@@ -9,6 +9,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -28,24 +29,27 @@ class NewTicketType extends AbstractType
                     'Radio Defectuoso' => 'Radio Defectuoso', 
                     'Red no Detectada' => 'Red no Detectada', 
                     'Otros' => 'Otros'
-                ]
+                ],
+                'label' => false
             ])
             
-            ->add('desc_ticket')
+            ->add('desc_ticket', TextareaType::class ,[
+                'label' => false
+            ])
             ->add('status_ticket', ChoiceType::class, [
                 'choices'  => [
                     'Abierto' => 'Abierto',
                     'Nuevo' => 'Nuevo',
                     'Resuelto' => 'Resuelto',
-                ]
+                ],
+                'label' => false
             ])
             
             ->add('fkClient', EntityType::class, [
                 'class' => Clientes::class,
-                
                 'query_builder' => function (ClientesRepository $er) {
                     return $er->createQueryBuilder('b')
-                        ->orderBy('b.name_client', 'ASC');
+                        ->orderBy('b.id', 'ASC');
                         
                 },
                 'choice_label' => 'name_client',

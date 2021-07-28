@@ -19,22 +19,22 @@ class InventarioRepository extends ServiceEntityRepository
         parent::__construct($registry, Inventario::class);
     }
 
-    // /**
-    //  * @return Inventario[] Returns an array of Inventario objects
-    //  */
-    /*
-    public function findByExampleField($value)
+     /**
+      * @return Inventario[]
+     */
+
+    public function checkDuplicatedMac($id, $mac )
     {
         return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('i.id', 'ASC')
-            ->setMaxResults(10)
+            ->andWhere('i.mac_inventory = :mac  AND i.id != :id')
+            ->setParameter('mac', $mac)
+            ->setParameter('id', $id)
+            ->setMaxResults(1)
             ->getQuery()
             ->getResult()
         ;
     }
-    */
+
 
     /*
     public function findOneBySomeField($value): ?Inventario

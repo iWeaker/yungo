@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
+use App\Form\InventaryType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Inventario;
+use App\Repository\InventarioRepository;
 use App\Form\NewInventaryType;
 use Omines\DataTablesBundle\Adapter\Doctrine\ORMAdapter;
 use Omines\DataTablesBundle\Column\TextColumn;
@@ -31,12 +33,17 @@ class InventarioController extends AbstractController
     
         $response = array();
         foreach ($inventario as $inv) {
+            $ip = "Sin asginar ip";
+            if($inv->getServicio() != null){
+                $ip = $inv->getServicio()->getIpService();
+            }
             $response[] = array(
                 $inv->getId(),
                 $inv->getMacInventory(),
                 $inv->getModelInventory(), 
                 $inv->getBrandInventory(), 
-                $inv->getTypeInventory(), 
+                $inv->getTypeInventory(),
+                $ip
             );
         }
         
@@ -94,11 +101,59 @@ class InventarioController extends AbstractController
      *
      * 
      */
-    public function edit($id){
+    public function edit($id, Request  $request){
+        $form = $this->createForm(InventaryType::class, new Inventario());
+        $inv = $this->getDoctrine()->getRepository(Inventario::class)->findOneBy([
+            'id' => $id
+        ]);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            $con = $this->getDoctrine()->getManager();
+            $brand = $form['brand_inventory']->getData();
+            $model = $form['model_inventory']->getData();
+            $mac = $form['mac_inventory']->getData();
+            $radio = $form['type_inventory']->getData();
+            if($brand == null || $model == null || $mac == null || $radio == null){
+                return new JsonResponse([
+                    'status' => false,
+                    'msg' => "Algun dato no esta escrito correctamente"
+                ]);
+            }else{
+                $v = $this->getDoctrine()->getRepository(Inventario::class)->checkDuplicatedMac($id, $mac);
+                if(count($v) > 0){
+                    return new JsonResponse([
+                        'status' => false,
+                        'msg' => "Existe una MAC igual en el sistema"
+                    ]);
+                }else{
+                    $inv->setBrandInventory($brand);
+                    $inv->setModelInventory($model);
+                    $inv->setMacInventory($mac);
+                    $inv->setTypeInventory($radio);
+                    $con->persist($inv);
+                    try{
+                        $con->flush();
+                        return new JsonResponse([
+                            'status' => true,
+                            'msg' => "Se ha realizado con exito la actualizacion"
+                        ]);
+                    }catch(\Exception $e){
+                        $message = $e->getMessage();
+                    }
+                }
+            }
+        }
         return $this->render('inventario/edit.html.twig', [
             'brand' => 'asdasdasd', 
             'model' => 'asf', 
-            'id' => $id
+            'id' => $id,
+            'form' => $form->createView(),
+            'brand' => $inv->getBrandInventory(),
+            'type' => $inv->getTypeInventory(),
+            'model' => $inv->getModelInventory(),
+            'mac' => $inv->getMacInventory()
+
+
         ]);
     }
 

@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello InventarioController!{% endblock %}
+{% block title %}Inventario{% endblock %}
 
 {% block body %}
 <div class="overflow-hidden flex flex-shrink p-4 md:flex-shrink-0">
@@ -25,8 +25,9 @@
                         <th class="p-3 text-left"></th>
                         <th class="p-3 text-left"></th>
                         <th class="p-3 text-left"></th> 
-                        <th class="p-3 text-left"></th> 
-                        <th class="p-3 text-left"></th> 
+                        <th class="p-3 text-left"></th>
+                        <th class="p-3 text-left"></th>
+                        <th class="p-3 text-left"></th>
                     </tr>  
                 </thead>
             </table>
@@ -56,14 +57,14 @@ $(document).ready(function() {
             { title: "Modelo", "width":300 },
             { title: "Marca", "width":100 },
             { title: "Tipo", "width":200 },
+            { title: "IP", "width":200 },
             { title: "", "width":300}, 
            
         ], 
         "columnDefs": [ {
             "targets": -1,
             "data": null,
-            "defaultContent": "<button id='assign' class='view bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>Asignar</button>"+
-                              "<button id='edit' class='view bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' style='margin-left:6px'>Editar</button>"
+            "defaultContent": "<button id='edit' class='view bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' style='margin-left:6px'>Editar</button>"
         } ]
         
     } );

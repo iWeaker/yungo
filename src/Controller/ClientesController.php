@@ -29,7 +29,6 @@ class ClientesController extends AbstractController
         $clientes = $this->getDoctrine()
         ->getRepository(Clientes::class)
         ->findAll();
-    
         $response = array();
         foreach ($clientes as $cliente) {
             $response[] = array(
@@ -44,13 +43,12 @@ class ClientesController extends AbstractController
             'response' => json_encode($response),
         ]);
     }
-
     /**
      * @Route("/clientes/create", name="createClientes")
      */
-    public function create(Request $request): Response
+    public function create(Request $request)
     {
-        $form = $this->createForm(NewClientType::class, new Clientes);
+        $form = $this->createForm(NewClientType::class, new Clientes());
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
             $name = $form['name_client']->getData();
@@ -59,12 +57,58 @@ class ClientesController extends AbstractController
             $address = $form['fkAddress']->getData();
             $zone = $form['zone_place']->getData();
             $packet = $form['name_packet']->getData();
+            $ip = $form['ip']->getData();
 
-            if($name == null || $email == null || $phone == null || $address == null || $zone == null || $packet == null){
-
+            if($name == null || $email == null || $phone == null || $address == null || $zone == null || $packet == null || $ip == null){
+                return $this->json(array(
+                    'status' => false,
+                    'msg' => 'No se realizo correctamente, verifica los datos'
+                ));
             }else{
-                $client = new Clientes();
+                if(! filter_var($ip, FILTER_VALIDATE_IP)){
+                    return $this->json(array(
+                        'status' => false,
+                        'msg' => 'No es una IP valida'
+                    ));
+                }
+                $validate = $this->getDoctrine()
+                    ->getRepository(Servicio::class)
+                    ->findBy([
+                        'ip_service' => $ip
+                    ]);
+                if(count($validate)> 0){
 
+                        return $this->json(array(
+                            'status' => false,
+                            'msg' => 'Esa IP ya se encuentra en uso'
+                        ));
+
+                }
+                $con = $this->getDoctrine()->getManager();
+                $client = new Clientes();
+                $client->setNameClient($name);
+                $client->setEmailClient($email);
+                $client->setPhoneClient($phone);
+                $con->persist($client);
+                try {
+                    $ad = new Direccion();
+                    $ad->setClientes($client);
+                    $ad->setFkZone($zone);
+                    $ad->setNameAddress($address);
+                    $con->persist($ad);
+                    $se = new Servicio();
+                    $se->setFkAddress($ad);
+                    $se->setFkPacket($packet);
+                    $se->setIpService($ip);
+                    $con->persist($se);
+                    $con->flush();
+                    return $this->json(array(
+                        'status' => true,
+                        'msg' => 'Se ha realizado con exito'
+                    ));
+                }catch(\Exception $e) {
+                    $msg = $e->getMessage();
+                }
             }
         }
         return $this->render('clientes/create.html.twig', [
@@ -72,19 +116,43 @@ class ClientesController extends AbstractController
             'form' => $form->createView()
         ]);
     }
-
+    /**
+     * @Route("/clientes/delete/{id}", name="deleteClientes")
+     *
+     */
+    public function delete($id): JsonResponse
+    {
+        $cliente = $this->getDoctrine()
+            ->getRepository(Clientes::class)
+            ->findOneBy([
+                'id' => $id
+            ]);
+        if($cliente != null){
+            $con = $this->getDoctrine()->getManager();
+            try {
+                $con->remove($cliente);
+                $con->flush();
+                return $this->json(array(
+                    'msg' => 'Se ha eliminado correctamente'
+                ));
+            }catch(\Exception $e) {
+                $message = $e->getMessage();
+            }
+        }
+        return new JsonResponse([
+            'msg' => 'Sucedio algo'
+        ]);
+    }
     /**
      * @Route("/clientes/show/{id}", name="showClientes")
      */
 
      public function show($id){
-
         $cliente = $this->getDoctrine()
         ->getRepository(Clientes::class)
         ->findOneBy([
             'id' => $id
         ]);
-
         return $this->render('clientes/show.html.twig',  [
             'id' => $cliente->getId(),
             'name' => $cliente->getNameClient(),
@@ -101,15 +169,11 @@ class ClientesController extends AbstractController
      */
 
     public function editPersonal($id, Request $request){
-
-        
-        
         $cliente = $this->getDoctrine()
         ->getRepository(Clientes::class)
         ->findOneBy([
             'id' => $id
         ]);
-
         $form = $this->createForm(ClientType::class, new Clientes());
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
@@ -117,11 +181,9 @@ class ClientesController extends AbstractController
             $cl = $form['name_client']->getData();
             $em = $form['email_client']->getData();
             $ph = $form['phone_client']->getData();
-            
             if($cl == null || $em == null || $ph == null){
                 self::$error = "Error de ambos";
             }else{
-                
                 $cliente->setNameClient($cl);
                 $cliente->setEmailClient($em);
                 $cliente->setPhoneClient($ph);
@@ -218,28 +280,14 @@ class ClientesController extends AbstractController
             ->findOneBy([
                 'id' => $id
             ]);
-        $servicio = $this->getDoctrine()->getRepository(Servicio::class)
-            ->findMultiServices($id);
-        $ticket = $this->getDoctrine()->getRepository(Ticket::class)
-            ->findMultiTicket($id);
         if($direccion != null){
             $entityManager = $this->getDoctrine()->getManager();
-            /*foreach ($servicio as $service) {
-                $entityManager->remove($service);
-            }
-            foreach ($ticket as $t) {
-                $entityManager->remove($t);
-            }*/
             $entityManager->remove($direccion);
             $entityManager->flush();
-
-
-
             return new JsonResponse([
                 'msg' => $id
             ]);
         }
-
     }
     /**
      * @Route("/clientes/editService/{id}", name="editClientesService")
@@ -247,7 +295,6 @@ class ClientesController extends AbstractController
     public function editService($id){
         $servicio = $this->getDoctrine()->getRepository(Servicio::class)
         ->findMultiServices($id);
-
         $response = array(
             'status' => "",
             'message' =>  $this->renderView('clientes/editService.html.twig' , [
@@ -256,17 +303,15 @@ class ClientesController extends AbstractController
                 //'packet' => (string) $servicio->getFkPacket()->getId(),
                 //'mac' => (string) $servicio->getFkInventary()->getId()
                 'service'  => $servicio,
-
             ])
         );
         return $this->json($response);
     }
-
     /**
      * @Route("/clientes/editServiceSpecific/{idService}/{inventory}", name="editServiceSpecific")
      */
-
-    public function editServiceSpecific($idService, $inventory, Request $request){
+    public function editServiceSpecific($idService, $inventory, Request $request): JsonResponse
+    {
         $servicio = $this->getDoctrine()->getRepository(Servicio::class)
             ->findOneBy([
                 'id' => $idService
@@ -278,7 +323,10 @@ class ClientesController extends AbstractController
             $packet = $form['fkPacket']->getData();
             $inventory = $form['fkInventary']->getData();
             if($packet == null || $inventory == null){
-
+                return new JsonResponse([
+                    'status' => false,
+                    'msg' => 'Verifica los datos'
+                ]);
             }else{
                 $servicio->setFkPacket($packet);
                 $servicio->setFkInventary($inventory);
@@ -286,18 +334,18 @@ class ClientesController extends AbstractController
                 try{
                     $entityManager->flush();
                     return new JsonResponse([
-                        'status' => true
+                        'status' => true,
+                        'msg' => 'Se ha realizado con exito'
                     ]);
                 }catch(\Exception $e) {
                     $message = $e->getMessage();
                     return new JsonResponse([
-                        'status' => false
+                        'status' => false,
+                        'msg'=> 'Sucedio un problema en el sistema'
                     ]);
                 }
 
             }
-
-
         }
         $response = array(
             'status' => "",
@@ -311,5 +359,4 @@ class ClientesController extends AbstractController
         );
         return $this->json($response);
     }
-   
 }
