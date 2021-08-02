@@ -34,7 +34,38 @@ class ServicioRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
-    
+    // /**
+    //  * @return Servicio[] Returns an array of Servicio objects
+    //  */
+    public function findAllServicesCliente($value)
+    {
+
+        return $this->createQueryBuilder('s')
+            ->leftJoin('s.fkAddress', 'a')
+            ->leftJoin('a.clientes', 'c')
+            ->andWhere('c.id = :val')
+            ->setParameter('val', $value)
+            ->orderBy('s.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+    /*
+     *
+     * /*
+     *$conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+            SELECT * FROM servicio s
+                LEFT JOIN direccion d ON s.fk_address_id = d.id
+                LEFT JOIN clientes c ON d.clientes_id = c.id WHERE c.id = :value;
+            ';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(['value' => $value]);
+
+        // returns an array of arrays (i.e. a raw data set)
+        return $stmt->fetchAllAssociative();
+     */
 
     /*
     public function findOneBySomeField($value): ?Servicio

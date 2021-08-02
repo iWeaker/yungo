@@ -11,7 +11,7 @@
 <div class= "overflow-hidden flex items-center justify-center" >
     <div class="shadow overflow-hidden sm:rounded-md bg-white" style="margin-top:3px;margin-bottom:3px;padding:10px">
         <div class="inset-x-0 bottom-0">
-           <div style="position:absolute;z-index:1">
+           <div style="position:relative;z-index:1;margin-bottom:10px">
             <a href="/inventario/create">
               <button class="hover:bg-green-400 bg-green-500 text-white font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded">
                   nuevo inventario
@@ -30,15 +30,60 @@
                         <th class="p-3 text-left"></th>
                     </tr>  
                 </thead>
+             <tfoot>
+             <tr>
+               <th class="p-3 text-left"></th>
+               <th class="p-3 text-left">
+                 <input type="text" placeholder="Buscar por Mac">
+               </th>
+               <th class="p-3 text-left"></th>
+               <th class="p-3 text-left"></th>
+               <th class="p-3 text-left"></th>
+               <th class="p-3 text-left">
+                 <input type="text" placeholder="Buscar por IP">
+               </th>
+               <th class="p-3 text-left"></th>
+             </tr>
+             </tfoot>
             </table>
         </div>
     </div>
 </div>
 <script>
 $(document).ready(function() {
-    var dataSet = "{{ response }}";  
-    var dataSetRemove = JSON.parse(dataSet.replace(/&quot;/g,'"')); 
-    var table = $('#tabla-inventario').DataTable( {
+    let dataSetRemove = JSON.parse("{{ response }}".replace(/&quot;/g,'"'));
+    let table = $('#tabla-inventario').DataTable( {
+        initComplete: function () {
+            this.api().columns([2,3, 4]).every( function () {
+                let column = this;
+                let select = $('<select><option value=""></option></select>')
+                    .appendTo( $(column.footer()).empty() )
+                    .on( 'change', function () {
+                        let val = $.fn.dataTable.util.escapeRegex(
+                            $(this).val()
+                        );
+
+                        column
+                            .search( val ? '^'+val+'$' : '', true, false )
+                            .draw();
+                    } );
+                column.data().unique().sort().each( function ( d, j ) {
+                    select.append( '<option value="'+d+'">'+d+'</option>' )
+                } );
+            } );
+
+            this.api().columns([1, 5]).every( function () {
+                let that = this;
+
+                $( 'input', this.footer() ).on( 'keyup change clear', function () {
+                    if ( that.search() !== this.value ) {
+                        that
+                            .search( this.value )
+                            .draw();
+                    }
+                } );
+            } );
+        },
         data: dataSetRemove,
         "bLengthChange": false,
         "bFilter": true,
@@ -49,8 +94,9 @@ $(document).ready(function() {
             'previous': '<button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r rounded-l">Prev</button>',
             'next':'<button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r rounded-l">Next</button>'
           },
-          searchPlaceholder: "Buscar...",
+          searchPlaceholder: "Buscar modelo...",
         },
+        search: false,
         columns: [
             { title: "#", "width":100 },
             { title: "Mac", "width":300 },
@@ -58,28 +104,23 @@ $(document).ready(function() {
             { title: "Marca", "width":100 },
             { title: "Tipo", "width":200 },
             { title: "IP", "width":200 },
-            { title: "", "width":300}, 
-           
+            { title: "", "width":300},
         ], 
         "columnDefs": [ {
             "targets": -1,
             "data": null,
             "defaultContent": "<button id='edit' class='view bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' style='margin-left:6px'>Editar</button>"
         } ]
-        
     } );
     $('#tabla-inventario tbody').on( 'click', 'button', function () {
-        var action = this.id;
-        var data = table.row( $(this).parents('tr') ).data();
-        if (action=='assign')
-        window.location.href = "/inventario/assign/"+data[0];
-        if(action == 'edit')
+        let action = this.id;
+        let data = table.row( $(this).parents('tr') ).data();
+        if(action === 'edit')
         window.location.href = "/inventario/edit/"+data[0];
     } );
-    var input = $('#tabla-inventario_filter label input');
+    let input = $('#tabla-inventario_filter label input');
     $("#tabla-inventario_filter label").html('');
-    $("#tabla-inventario_filter label").append(input);
-   
+
 } );
 </script>
 <style>
@@ -104,8 +145,8 @@ $(document).ready(function() {
       border-bottom: 0;
     }
   
-    th:not(:last-child) {
-      border-bottom: 2px solid rgba(0, 0, 0, .1);
+    th select {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     }
     #tabla-inventario_filter{
       margin-bottom:10px;

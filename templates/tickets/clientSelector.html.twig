@@ -1,0 +1,68 @@
+
+<div class= "overflow-hidden flex items-center justify-center" >
+  <div class="overflow-hidden sm:rounded-md bg-white" style="margin-top:3px;margin-bottom:3px;padding:10px">
+    <div class="inset-x-0 bottom-0">
+
+      <table id="tabla-clientes" class="">
+        <thead class="text-white">
+        <tr style=" background-color:#1DABE0" class="block text-sm font-medium  bold flex flex-col flex-no wrap sm:table-row rounded-l-lg sm:rounded-none mb-2 sm:mb-0">
+          <th class="p-3 text-left"></th>
+          <th class="p-3 text-left"></th>
+          <th class="p-3 text-left"></th>
+          <th class="p-3 text-left"></th>
+          <th class="p-3 text-left"></th>
+        </tr>
+        </thead>
+      </table>
+    </div>
+  </div>
+</div>
+<script>
+    $(document).ready(function() {
+        let dataSet = "{{ response }}";
+        let dataSetRemove = JSON.parse(dataSet.replace(/&quot;/g, '"'));
+        let table = $('#tabla-clientes').DataTable({
+            data: dataSetRemove,
+            language: {
+                'paginate': {
+                    'previous': '<button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r rounded-l">Prev</button>',
+                    'next': '<button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r rounded-l">Next</button>'
+                },
+                searchPlaceholder: "Buscar...",
+            },
+            "bLengthChange": false,
+            "bFilter": true,
+            "bInfo": false,
+            "bAutoWidth": false,
+            columns: [
+                {title: "#", "width": 100},
+                {title: "Nombre", "width": 300},
+                {title: "Correo", "width": 100},
+                {title: "Telefono", "width": 100},
+                {title: "", "width": 200},
+            ],
+            "columnDefs": [{
+                "targets": -1,
+                "data": null,
+                "width": 300,
+                "defaultContent": "<button id='view' class='view bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>Crear ticket</button>"
+
+            }]
+        });
+        table.on( 'click','button', function () {
+            let action = this.id;
+            let is = $(this);
+            let row = table.row( is.parents('tr') );
+            let data = row.data();
+            if (action==='view'){
+                window.location.href = "/tickets/create/"+data[0];
+            }
+        } );
+        $('#tabla-clientes_filter  label input').on( 'focus', function () {
+            $(this).on("keyup", function() {
+                let value = $(this).val().toLowerCase();
+                table.columns(1).search(value).draw();
+            });
+        });
+    });
+</script>

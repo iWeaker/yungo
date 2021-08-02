@@ -1,6 +1,4 @@
 {% extends 'base.html.twig' %}
-
-
 {% block body %}
 <div class ="sm:mt-0 px-6" style="padding-top:10px">
     <div class="grid grid-cols-6 gap-6">
@@ -24,14 +22,13 @@
                                     <p id="phone-show" class="font-bold">{{ phone }}</p>
                                 </div>
                                 <div class="col-span-6 sm:col-span-6">
-                                    <a style="cursor:pointer" onclick="personalEdit()" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 border border-green-700 rounded">Editar</a>
+                                    <a style="cursor:pointer" onclick="modal('{{ path('editClientesPersonal', {id : id })}}', 'Editar datos personales')" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 border border-green-700 rounded">Editar</a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-    
             <div class="col-span-6 sm:col-span-4">
                 <p class="block uppercase tracking-wide text-gray-700 text-s font-bold mb-2">Servicios</p>
                 <div class="md:mt-0 md:col-start-1 col-end-6">
@@ -53,17 +50,17 @@
                                         <p class="leading-loose" >{{ ad.getFkZone.getZonePlace }}</p>
                                     </div>
                                     <div class="col-span-6 sm:col-span-1">
-                                    <a style="cursor:pointer" onclick="serviceEdit('{{ad.getId}}')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Servicios</a>
+                                    <a style="cursor:pointer" onclick="modal('/clientes/editService/{{ad.getId}}', 'Servicios')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Servicios</a>
                                     </div>
                                     <div class="col-span-6 sm:col-span-1" >
-                                        <a style="cursor:pointer" onclick="addressEdit('{{ad.getId}}')" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4  border-green-700 rounded">Editar</a>
+                                        <a style="cursor:pointer" onclick="modal('/clientes/editAddress/{{ad.getId}}' , 'Editar direccion')" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4  border-green-700 rounded">Editar</a>
                                         <a style="cursor:pointer" onclick="deleteEdit('{{ad.getId}}')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4  border-red-700 rounded">Eliminar</a>
                                     </div>
                                 </div>
                             {% endfor %}
                            </div>
                             <div style=" text-align:center;height:60px; border-top-width: 1px; border-top-style: solid; padding-top:10px" >
-                                <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full" style="float:left">
+                                <button onclick="modal('/clientes/addAddress/{{ id }}', 'Agregar direccion')" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full" style="float:left">
                                     Agregar direccion
                                 </button>
                                 <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" style="float:right">
@@ -91,7 +88,7 @@
                                         <th class="p-2 text-center">Fecha</th>
                                         <th class="p-2 text-center">Descripcion</th>
                                         <th class="p-2 text-center">Estado</th>
-                                        <th class="p-2 text-left" width="110px" >Problematica</th>
+                                        <th class="p-2 text-left">Problematica</th>
                                     </tr>
                                 </thead>
                                 <tbody class="flex-1 sm:flex-none">
@@ -99,7 +96,7 @@
                                 
                                     <tr class="flex flex-col flex-no wrap sm:table-row mb-3 sm:mb-0">
                                         <td class="border-grey-light border hover:bg-gray-100 p-2 truncate text-sm">{{ tick.getId }}</td>
-                                        <td class="border-grey-light border hover:bg-gray-100 p-2 truncate text-sm">{{ tick.getFkAddress.getNameAddress }}</td>
+                                        <td class="border-grey-light border hover:bg-gray-100 p-2 truncate text-sm">{{ tick.service.getFkAddress.getNameAddress }}</td>
                                         <td class="border-grey-light border hover:bg-gray-100 p-2 truncate text-sm">{{ tick.getDateTicket|date('Y-m-d')  }}</td>
                                         <td class="border-grey-light border hover:bg-gray-100 p-2  text-sm">{{ tick.getDescTicket }}</td>
                                        {% if tick.getStatusTicket == 'Nuevo' %}
@@ -124,73 +121,38 @@
             </div>
     </div>
  </div>
-<script>
-
-</script>
 
 <script >
-
-    function personalEdit() {
+    function modal(url, title) {
+        $.ajax({
+            type: 'POST',
+            url: url,
+            dataType: 'json',
+            success: function(response) {
+                $.sweetModal({
+                    title: title,
+                    content: response.message,
+                    width: '500px',
+                });
+            },
+        });
+    }
+    function deleteEdit(domicilio){
+        $.sweetModal.confirm('Eliminacion', '¿Seguro de eliminar este domicilio?', function() {
             $.ajax({
                 type: 'POST',
-                url: '{{ path('editClientesPersonal', {id : id })}}',
+                url: '/clientes/deleteAddress/'+domicilio,
                 dataType: 'json',
-                success: function(response) {
+                success: function(response){
                     $.sweetModal({
-                        title: 'Editar datos personales',
-                        content: response.message,
-                        width: '500px',
+                        content: response.msg,
+                        icon: $.sweetModal.ICON_SUCCESS,
                     });
-                },
-            });
-        }
-        function addressEdit(address) {
-            $.ajax({
-                type: 'POST',
-                url: '/clientes/editAddress/'+address,
-                dataType: 'json',
-                success: function(response) {
-                    $.sweetModal({
-                        title: 'Editar direccion',
-                        content: response.message,
-                         width: '500px',
-                    });
-                },
-            });
-        }
-        function serviceEdit(service) {
-            $.ajax({
-                type: 'POST',
-                url: '/clientes/editService/'+service,
-                dataType: 'json',
-                success: function(response) {
-                    $.sweetModal({
-                        title: 'Servicios',
-                        content: response.message,
-                         width: '500px',
-                    });
-                },
-            });
-        }
-        function deleteEdit(domicilio){
-            $.sweetModal.confirm('Eliminacion', '¿Seguro de eliminar este domicilio?', function() {
-                $.ajax({
-                    type: 'POST',
-                    url: '/clientes/deleteAddress/'+domicilio,
-                    dataType: 'json',
-                    success: function(response){
-                        $.sweetModal({
-                            content: response.msg,
-                            icon: $.sweetModal.ICON_SUCCESS,
-
-                        });
-                    }
-                })
-            }, function (){
-
-            });
-
-        }
+                }
+            })
+        }, function (){
+        });
+    }
 </script>
     <style>
         html,
@@ -201,7 +163,6 @@
             table {
                 display: inline-table !important;
             }
-
             thead tr:not(:first-child) {
                 display: none;
             }
@@ -212,7 +173,5 @@
             th:not(:last-child) {
         border-bottom: 2px solid rgba(0, 0, 0, .1);
         }
-
-
     </style>
 {% endblock %}

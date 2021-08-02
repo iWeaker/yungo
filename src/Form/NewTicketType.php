@@ -44,18 +44,7 @@ class NewTicketType extends AbstractType
                 ],
                 'label' => false
             ])
-            
-            ->add('fkClient', EntityType::class, [
-                'class' => Clientes::class,
-                'query_builder' => function (ClientesRepository $er) {
-                    return $er->createQueryBuilder('b')
-                        ->orderBy('b.id', 'ASC');
-                        
-                },
-                'choice_label' => 'name_client',
-                'label' => false
-            ])
-            //->add('fkAddress')
+
         ;
     }
 

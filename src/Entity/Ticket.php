@@ -51,10 +51,13 @@ class Ticket
     private $comentarios;
 
     /**
-     * @ORM\OneToOne(targetEntity=Direccion::class)
+     * @ORM\ManyToOne(targetEntity=Servicio::class, inversedBy="tickets")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $fkAddress;
+    private $service;
+
+
+
 
     public function __construct()
     {
@@ -156,15 +159,19 @@ class Ticket
         return $this;
     }
 
-    public function getFkAddress(): ?Direccion
+    public function getService(): ?Servicio
     {
-        return $this->fkAddress;
+        return $this->service;
     }
 
-    public function setFkAddress(Direccion $fkAddress): self
+    public function setService(?Servicio $service): self
     {
-        $this->fkAddress = $fkAddress;
+        $this->service = $service;
 
         return $this;
     }
+
+
+
+
 }

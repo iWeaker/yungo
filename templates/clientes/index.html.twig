@@ -32,16 +32,17 @@
 </div>
 <script>
 $(document).ready(function() {
-    var dataSet = "{{ response }}";
-    var dataSetRemove = JSON.parse(dataSet.replace(/&quot;/g,'"'));
-    var table = $('#tabla-clientes').DataTable( {
+    let dataSet = "{{ response }}";
+    let dataSetRemove = JSON.parse(dataSet.replace(/&quot;/g,'"'));
+    let table = $('#tabla-clientes').DataTable( {
+
         data: dataSetRemove,
         language: {
           'paginate': {
             'previous': '<button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r rounded-l">Prev</button>',
             'next':'<button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r rounded-l">Next</button>'
           },
-          searchPlaceholder: "Buscar...",
+          searchPlaceholder: "Buscar por nombre...",
         },
         "bLengthChange": false,
         "bFilter": true,
@@ -62,19 +63,17 @@ $(document).ready(function() {
                               "<button id='delete' class='view bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded' style='margin-left:6px'>Eliminar</button>"
         } ]
     } );
-    var input = $('#tabla-clientes_filter label input');
-    $("#tabla-clientes_filter label").html('');
-    $("#tabla-clientes_filter label").append(input);
-    $('#tabla-clientes').on( 'click','button', function () {
-        var action = this.id;
-        var is = $(this);
-        var row = table.row( is.parents('tr') );
-        var data = row.data();
-
-        if (action=='view'){
+    let input = $('#tabla-clientes_filter label input');
+    $("#tabla-clientes_filter label").html('').append(input);
+    table.on( 'click','button', function () {
+        let action = this.id;
+        let is = $(this);
+        let row = table.row( is.parents('tr') );
+        let data = row.data();
+        if (action==='view'){
             window.location.href = "/clientes/show/"+data[0];
         }
-        if(action == 'delete'){
+        if(action === 'delete'){
             $.sweetModal.confirm('¿Seguro de eliminar?', function() {
                 $.ajax({
                     type: 'POST',
@@ -92,18 +91,29 @@ $(document).ready(function() {
                         $.sweetModal(a.msg);
                     }
                 });
-                ;
             }, function(){
                 $.sweetModal('Se ha cancelado la eliminacion');
             });
         }
     } );
+    $('#tabla-clientes_filter  label input').on( 'focus', function () {
+        $(this).on("keyup", function() {
+            let value = $(this).val().toLowerCase();
+            table.columns(1).search(value).draw();
+        });
+    });
 } );
 </script>
 <style>
     html,
     body {
       height: 100%;
+    }
+    #tabla-clientes_wrapper{
+      max-width:1320px
+    }
+    #tabla-clientes_filter{
+      margin-bottom:10px;
     }
     @media (min-width: 640px) {
       table {

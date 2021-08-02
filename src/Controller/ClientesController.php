@@ -58,56 +58,52 @@ class ClientesController extends AbstractController
             $zone = $form['zone_place']->getData();
             $packet = $form['name_packet']->getData();
             $ip = $form['ip']->getData();
+            $flag = true; 
+            $msg = ""; 
 
             if($name == null || $email == null || $phone == null || $address == null || $zone == null || $packet == null || $ip == null){
-                return $this->json(array(
-                    'status' => false,
-                    'msg' => 'No se realizo correctamente, verifica los datos'
-                ));
+                $flag = false; 
+                $msg = "No se validaron correctamente, verifique los datos."; 
             }else{
-                if(! filter_var($ip, FILTER_VALIDATE_IP)){
-                    return $this->json(array(
-                        'status' => false,
-                        'msg' => 'No es una IP valida'
-                    ));
-                }
-                $validate = $this->getDoctrine()
-                    ->getRepository(Servicio::class)
-                    ->findBy([
-                        'ip_service' => $ip
-                    ]);
-                if(count($validate)> 0){
-
+                //Validacion del numero telefonico
+                if(! filter_var($phone, FILTER_VALIDATE_INT) && $flag){ $flag = false; $msg = "Campo telefono solo numeros.";  }
+                //Validacion de la IP
+                if(! filter_var($ip, FILTER_VALIDATE_IP) && $flag){ $flag = false; $msg = "No es una ip valida."; }
+                //Validacion que no se repita la IP Publica del cliente
+                if(count($this->getDoctrine()->getRepository(Servicio::class)->findBy([
+                    'ip_service' => $ip
+                ])) > 0){ $flag = false; $msg = "La ip ya se encuentra en uso";   }
+                if($flag){
+                    $con = $this->getDoctrine()->getManager();
+                    $client = new Clientes();
+                    $client->setNameClient($name);
+                    $client->setEmailClient($email);
+                    $client->setPhoneClient($phone);
+                    $con->persist($client);
+                    try {
+                        $ad = new Direccion();
+                        $ad->setClientes($client);
+                        $ad->setFkZone($zone);
+                        $ad->setNameAddress($address);
+                        $con->persist($ad);
+                        $se = new Servicio();
+                        $se->setFkAddress($ad);
+                        $se->setFkPacket($packet);
+                        $se->setIpService($ip);
+                        $con->persist($se);
+                        $con->flush();
                         return $this->json(array(
-                            'status' => false,
-                            'msg' => 'Esa IP ya se encuentra en uso'
+                            'status' => true,
+                            'msg' => 'Se ha realizado con exito'
                         ));
-
-                }
-                $con = $this->getDoctrine()->getManager();
-                $client = new Clientes();
-                $client->setNameClient($name);
-                $client->setEmailClient($email);
-                $client->setPhoneClient($phone);
-                $con->persist($client);
-                try {
-                    $ad = new Direccion();
-                    $ad->setClientes($client);
-                    $ad->setFkZone($zone);
-                    $ad->setNameAddress($address);
-                    $con->persist($ad);
-                    $se = new Servicio();
-                    $se->setFkAddress($ad);
-                    $se->setFkPacket($packet);
-                    $se->setIpService($ip);
-                    $con->persist($se);
-                    $con->flush();
+                    }catch(\Exception $e) {
+                        $msg = $e->getMessage();
+                    }
+                }else{
                     return $this->json(array(
-                        'status' => true,
-                        'msg' => 'Se ha realizado con exito'
+                        'status' => $flag, 
+                        'msg' => $msg
                     ));
-                }catch(\Exception $e) {
-                    $msg = $e->getMessage();
                 }
             }
         }
@@ -216,6 +212,51 @@ class ClientesController extends AbstractController
         
     }
 
+    /**
+     * @Route("/clientes/addAddress/{id}", name="addClientesAddress")
+     *
+     */
+    public function addAddress($id, Request $request){
+        $form = $this->createForm(AddressType::class, new Direccion());
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            $address = $form['name_address']->getData();
+            $zone = $form['fkZone']->getData();
+            if($address == null || $zone == null){
+
+            }else{
+               $con = $this->getDoctrine()->getManager();
+                $direccion = new Direccion();
+                $direccion->setNameAddress($address);
+                $direccion->setFkZone($zone);
+                /** @var Clientes|object|null $client */
+                $client= $this->getDoctrine()->getRepository(Clientes::class)->findOneBy([
+                    'id'=> $id
+                ]);
+                $direccion->setClientes($client);
+                $con->persist($direccion);
+                try {
+                    $con->flush();
+                    return $this->json(array(
+                        'status' => true,
+                        'msg' => 'Se ha creado con exito'
+                    ));
+                }catch(\Exception $e) {
+                    $message = $e->getMessage();
+                }
+
+            }
+
+        }
+        $response = array(
+            'status' => "",
+            'message' =>  $this->renderView('clientes/addAddress.html.twig' , [
+                'id' => $id,
+                'form' => $form->createView(),
+            ])
+        );
+        return $this->json($response);
+    }
     /**
      * @Route("/clientes/editAddress/{id}", name="editClientesAddress")
      */
