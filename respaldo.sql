@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: yungo
 -- ------------------------------------------------------
--- Server version	10.5.11-MariaDB-1~exp1
+-- Server version	10.5.11-MariaDB-1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -28,7 +28,7 @@ CREATE TABLE `clientes` (
   `email_client` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `phone_client` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -37,7 +37,7 @@ CREATE TABLE `clientes` (
 
 LOCK TABLES `clientes` WRITE;
 /*!40000 ALTER TABLE `clientes` DISABLE KEYS */;
-INSERT INTO `clientes` VALUES (1,'Alejandro Bringas M','iweaker4you@gmail.com','6861096448');
+INSERT INTO `clientes` VALUES (23,'Alejandro Bringas','iweaker4you@gmail.com','6861096448'),(25,'Alejasdk','asdasd@asdasd','686109'),(26,'Paul Nieblas','paulN2012@gmail.com','6645963251'),(27,'Mario Benson','xxx@you.com','123123124'),(28,'Vivian Long','qwerty@me.com','135797531'),(29,'Alexis Gutierrez','gutierrezAle@email.com','6861096448'),(30,'Gustavo Martinez','tavoR7@red7.com.net','6862584679'),(31,'Saul Hernandez','osunasaul98@live.com','6862829507'),(32,'Eliazar Blanco Ochoa','ebo@gmail.ar','4748314329'),(33,'Emiliano Gaytan','emiYungo@yungo.mx','9991234567'),(34,'Evo Morales Pinochet','emp@callofduty.org.bo','5623145870'),(35,'Jose Hernandez Dominguez','jhd780301@outlook.com','6863412756'),(36,'Alejandro PHP8','php@gmail.com','6861096448');
 /*!40000 ALTER TABLE `clientes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -86,7 +86,7 @@ CREATE TABLE `direccion` (
   KEY `FK_F384BE956F030287` (`fk_zone_id`),
   CONSTRAINT `FK_F384BE956F030287` FOREIGN KEY (`fk_zone_id`) REFERENCES `sitios` (`id`),
   CONSTRAINT `FK_F384BE95FBC3AF09` FOREIGN KEY (`clientes_id`) REFERENCES `clientes` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -95,7 +95,7 @@ CREATE TABLE `direccion` (
 
 LOCK TABLES `direccion` WRITE;
 /*!40000 ALTER TABLE `direccion` DISABLE KEYS */;
-INSERT INTO `direccion` VALUES (1,1,'Av. Vallecitos #3394',8),(2,1,'Calle Rio Norte #2148 Amp. Nacionalista',8),(3,1,'Laguna Mayran #466 Gran Hacienda',8);
+INSERT INTO `direccion` VALUES (26,23,'Av Vallecitos #3394 Real del Rio',24),(29,25,'Av Vallecitos #3394 Real del Rio',24),(30,23,'Calle Vallecitos',1088),(31,36,'calle rio norte #2148',1088);
 /*!40000 ALTER TABLE `direccion` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -138,7 +138,7 @@ CREATE TABLE `inventario` (
   `brand_inventory` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `type_inventory` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -147,7 +147,7 @@ CREATE TABLE `inventario` (
 
 LOCK TABLES `inventario` WRITE;
 /*!40000 ALTER TABLE `inventario` DISABLE KEYS */;
-INSERT INTO `inventario` VALUES (1,'B1:C2:D2:A5:C3','PowerBeam','TP-Link','Radio'),(2,'B1:C3:D3:A3:C3','Banana','TP-Link','Radio'),(3,'B2:C2:D2:A4:C7','PowerBeamV2','TP-Link','Radio'),(5,'A2:C2:D2:A4:C10','PowerBeamV3','TP-Link','Radio');
+INSERT INTO `inventario` VALUES (6,'C1:C2:C3:C4:C5:C9','PowerBeam2','TP-LINK','Radio'),(7,'B1:B2:B3:B4:B5:B6','B23','Ubiquiti','Router'),(8,'C1:C2:C3:C4:C5:C6','LiteBeam','Ubiquiti','Omni'),(9,'A1:A2:A3:A4:A5:A6','X','Mercury','Septorial'),(10,'C3:F4:A1:C3:B2:C4','LiteBeam','Ubiquiti','Radio'),(11,'C1:C3:D3:F1:A5:B2','BMC-045','TP-LINK','Router'),(12,'3D:F2:C9:A6:B3:4F','TP-8','Mercusys','Router');
 /*!40000 ALTER TABLE `inventario` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -189,6 +189,7 @@ CREATE TABLE `servicio` (
   `fk_address_id` int(11) NOT NULL,
   `fk_packet_id` int(11) DEFAULT NULL,
   `fk_inventary_id` int(11) DEFAULT NULL,
+  `ip_service` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQ_CB86F22A1239C430` (`fk_inventary_id`),
   UNIQUE KEY `UNIQ_CB86F22A9F50DAFC` (`fk_inventary_id`),
@@ -197,7 +198,7 @@ CREATE TABLE `servicio` (
   CONSTRAINT `FK_CB86F22A1239C430` FOREIGN KEY (`fk_inventary_id`) REFERENCES `inventario` (`id`),
   CONSTRAINT `FK_CB86F22A5D965E6` FOREIGN KEY (`fk_address_id`) REFERENCES `direccion` (`id`),
   CONSTRAINT `FK_CB86F22A9F50DAFB` FOREIGN KEY (`fk_packet_id`) REFERENCES `paquete` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -206,7 +207,7 @@ CREATE TABLE `servicio` (
 
 LOCK TABLES `servicio` WRITE;
 /*!40000 ALTER TABLE `servicio` DISABLE KEYS */;
-INSERT INTO `servicio` VALUES (4,1,5,3),(5,2,4,5),(6,1,1,2);
+INSERT INTO `servicio` VALUES (18,26,1,NULL,'172.168.1.1'),(20,29,1,NULL,'172.168.1.18'),(21,26,2,NULL,'172.168.1.4'),(22,31,3,NULL,'172.150.150.150');
 /*!40000 ALTER TABLE `servicio` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -248,13 +249,13 @@ CREATE TABLE `ticket` (
   `desc_ticket` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `status_ticket` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
   `fk_client_id` int(11) NOT NULL,
-  `fk_address_id` int(11) NOT NULL,
+  `service_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `UNIQ_97A0ADA35D965E6` (`fk_address_id`),
   KEY `IDX_97A0ADA378B2BEB1` (`fk_client_id`),
-  CONSTRAINT `FK_97A0ADA35D965E6` FOREIGN KEY (`fk_address_id`) REFERENCES `direccion` (`id`),
-  CONSTRAINT `FK_97A0ADA378B2BEB1` FOREIGN KEY (`fk_client_id`) REFERENCES `clientes` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  KEY `IDX_97A0ADA3ED5CA9E6` (`service_id`),
+  CONSTRAINT `FK_97A0ADA378B2BEB1` FOREIGN KEY (`fk_client_id`) REFERENCES `clientes` (`id`),
+  CONSTRAINT `FK_97A0ADA3ED5CA9E6` FOREIGN KEY (`service_id`) REFERENCES `servicio` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -263,7 +264,7 @@ CREATE TABLE `ticket` (
 
 LOCK TABLES `ticket` WRITE;
 /*!40000 ALTER TABLE `ticket` DISABLE KEYS */;
-INSERT INTO `ticket` VALUES (2,'Ancho de Banda','2021-07-16 04:57:31','Tiene problemas de velocidad','Abierto',1,1);
+INSERT INTO `ticket` VALUES (10,'Ancho de banda','2021-07-30 19:23:36','Tiene problemas de internet','Abierto',23,18),(11,'Bloqueo de Paginas','2021-08-02 10:28:24','Dice que no se le conecta a paginas concretas','Abierto',25,20),(20,'Cobertura','2021-08-02 11:12:01','Se mio solo','Nuevo',23,18),(21,'Otros','2021-08-02 11:13:52','asd','Nuevo',23,18),(22,'Cobertura','2021-08-02 11:54:13','Tiene poco alcance bala bla','Abierto',23,18);
 /*!40000 ALTER TABLE `ticket` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -276,4 +277,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-07-22 11:32:24
+-- Dump completed on 2021-08-02 12:11:24

@@ -28,7 +28,7 @@
                     'previous': '<button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r rounded-l">Prev</button>',
                     'next': '<button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r rounded-l">Next</button>'
                 },
-                searchPlaceholder: "Buscar...",
+                searchPlaceholder: "Buscar por nombre...",
             },
             "bLengthChange": false,
             "bFilter": true,
@@ -58,6 +58,8 @@
                 window.location.href = "/tickets/create/"+data[0];
             }
         } );
+        let input = $('#tabla-clientes_filter label input');
+        $("#tabla-clientes_filter label").html('').append(input);
         $('#tabla-clientes_filter  label input').on( 'focus', function () {
             $(this).on("keyup", function() {
                 let value = $(this).val().toLowerCase();
