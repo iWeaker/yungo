@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Form\InventaryType;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,6 +15,13 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class InventarioController extends AbstractController
 {
+    protected $em;
+    /**
+     * @var EntityManagerInterface
+     */
+    public function  __construct(EntityManagerInterface $entityManager){
+       $this->em = $entityManager;
+    }
     /**
      * @Route("/inventario", name="inventario")
      */
@@ -49,31 +57,31 @@ class InventarioController extends AbstractController
         $form = $this->createForm(NewInventaryType::class, new Inventario);
         $form->handleRequest($request); 
         if($form->isSubmitted() && $form->isValid()){
-            $entityManager = $this->getDoctrine()->getManager();
             $brand = $form['brand_inventory']->getData(); 
             $model = $form['model_inventory']->getData(); 
             $mac   = $form['mac_inventory']->getData();
-            $type  = $form['type_inventory']->getData(); 
-            if($brand == null || $model == null || $mac == null || $type == null){
-                $error = "Error de ambos";
-            }else{
+            $type  = $form['type_inventory']->getData();
+            $flag = true;
+            $msg = "";
+            if($brand == null || $model == null || $mac == null || $type == null){$flag = false;$msg = "Algun dato no esta escrito correctamente";}
+            if($flag){
                 $in = new Inventario();
                 $in->setMacInventory($mac);
                 $in->setTypeInventory($type);
                 $in->setModelInventory($model); 
-                $in->setBrandInventory($brand); 
-                $entityManager->persist($in);
+                $in->setBrandInventory($brand);
+                $this->em ->persist($in);
                 try{
-                    $entityManager->flush();
-                    return new JsonResponse(array(
-                        'status' => true,
-                        'msg' => 'Se ha registrado con exito!'
-                    ));
+                    $this->em ->flush();
+                    $msg = "Se ha realizado correctamente";
                 }catch(\Exception $e) {
-                    $message = $e->getMessage();
+                    $msg = $e->getMessage();
                 }
-
             }
+            return new JsonResponse(array(
+                'status' => $flag,
+                'msg' => $msg
+            ));
         }
         return $this->render('inventario/create.html.twig', [
             'form' => $form->createView(),
@@ -89,10 +97,9 @@ class InventarioController extends AbstractController
         ]);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
-            $con = $this->getDoctrine()->getManager();
             $brand = $form['brand_inventory']->getData();
             $model = $form['model_inventory']->getData();
-            $mac = $form['mac_inventory']->getData();
+            $mac   = $form['mac_inventory']->getData();
             $radio = $form['type_inventory']->getData();
             $flag = true;
             $msg = "";
@@ -108,9 +115,9 @@ class InventarioController extends AbstractController
                     $inv->setModelInventory($model);
                     $inv->setMacInventory($mac);
                     $inv->setTypeInventory($radio);
-                    $con->persist($inv);
+                    $this->em ->persist($inv);
                     try {
-                        $con->flush();
+                        $this->em ->flush();
                         $msg = "Se ha realizado con exito la actualizacion";
                     } catch (\Exception $e) {
                         $msg = $e->getMessage();

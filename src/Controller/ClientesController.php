@@ -5,12 +5,11 @@ namespace App\Controller;
 use App\Entity\Clientes;
 use App\Entity\Direccion;
 use App\Entity\Servicio;
-use App\Entity\Sitios;
-use App\Entity\Ticket;
 use App\Form\ClientType;
 use App\Form\AddressType;
 use App\Form\NewClientType;
 use App\Form\ServiceType;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,6 +19,13 @@ use Symfony\Component\Serializer\Encoder\JsonEncode;
 
 class ClientesController extends AbstractController
 {
+    protected $em;
+    /**
+     * @var EntityManagerInterface
+     */
+    public function  __construct(EntityManagerInterface $entityManager){
+        $this->em = $entityManager;
+    }
     /**
      * @Route("/clientes", name="clientes")
      */
@@ -56,49 +62,46 @@ class ClientesController extends AbstractController
             $zone = $form['zone_place']->getData();
             $packet = $form['name_packet']->getData();
             $ip = $form['ip']->getData();
-            $flag = true; 
+            $flag = true;
             $msg = "";
             if($name == null || $email == null || $phone == null || $address == null || $zone == null || $packet == null || $ip == null){
-                $flag = false; 
-                $msg = "No se validaron correctamente, verifique los datos."; 
-            }else{
+                $flag = false;
+                $msg = "No se validaron correctamente, verifique los datos.";
+            }
+            if($flag){
                 if(! filter_var($phone, FILTER_VALIDATE_INT) && $flag){ $flag = false; $msg = "Campo telefono solo numeros.";  }
                 if(! filter_var($ip, FILTER_VALIDATE_IP) && $flag){ $flag = false; $msg = "No es una ip valida."; }
                 if(count($this->getDoctrine()->getRepository(Servicio::class)->findBy([
                     'ip_service' => $ip
                 ])) > 0){ $flag = false; $msg = "La ip ya se encuentra en uso";   }
                 if($flag){
-                    $con = $this->getDoctrine()->getManager();
                     $client = new Clientes();
                     $client->setNameClient($name);
                     $client->setEmailClient($email);
                     $client->setPhoneClient($phone);
-                    $con->persist($client);
+                    $this->em->persist($client);
                     try {
                         $ad = new Direccion();
                         $ad->setClientes($client);
                         $ad->setFkZone($zone);
                         $ad->setNameAddress($address);
-                        $con->persist($ad);
+                        $this->em->persist($ad);
                         $se = new Servicio();
                         $se->setFkAddress($ad);
                         $se->setFkPacket($packet);
                         $se->setIpService($ip);
-                        $con->persist($se);
-                        $con->flush();
-                        return $this->json(array(
-                            'status' => true,
-                            'msg' => 'Se ha realizado con exito'
-                        ));
+                        $this->em->persist($se);
+                        $this->em->flush();
+                        $msg = "Se ha realizado con exito";
                     }catch(\Exception $e) {
+                        $flag = false;
                         $msg = $e->getMessage();
                     }
-                }else{
-                    return $this->json(array(
-                        'status' => $flag, 
-                        'msg' => $msg
-                    ));
                 }
+                return $this->json(array(
+                    'status' => $flag,
+                    'msg' => $msg
+                ));
             }
         }
         return $this->render('clientes/create.html.twig', [
@@ -117,20 +120,21 @@ class ClientesController extends AbstractController
             ->findOneBy([
                 'id' => $id
             ]);
+        $flag = true;
+        $msg = "";
         if($cliente != null){
-            $con = $this->getDoctrine()->getManager();
             try {
-                $con->remove($cliente);
-                $con->flush();
-                return $this->json(array(
-                    'msg' => 'Se ha eliminado correctamente'
-                ));
+                $this->em->remove($cliente);
+                $this->em->flush();
+                $msg = "Se ha eliminado de manera correcta";
             }catch(\Exception $e) {
-                $message = $e->getMessage();
+                $flag = false;
+                $msg = $e->getMessage();
             }
         }
         return new JsonResponse([
-            'msg' => 'Sucedio algo'
+            'status' => $flag,
+            'msg' => $msg
         ]);
     }
     /**
@@ -163,29 +167,36 @@ class ClientesController extends AbstractController
         $form = $this->createForm(ClientType::class, new Clientes());
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
-            $entityManager = $this->getDoctrine()->getManager();
+
             $cl = $form['name_client']->getData();
             $em = $form['email_client']->getData();
             $ph = $form['phone_client']->getData();
+            $flag = true;
+            $msg = "";
             if($cl == null || $em == null || $ph == null){
-                self::$error = "Error de ambos";
-            }else{
+                $flag = false;
+                $msg = "No se enviaron los datos de manera correcta";
+            }
+            if($flag){
                 $cliente->setNameClient($cl);
                 $cliente->setEmailClient($em);
                 $cliente->setPhoneClient($ph);
-                $entityManager->persist($cliente);
+                $this->em->persist($cliente);
                 try{
-                    $entityManager->flush();
-                    return $this->json(array(
-                        'status' => true,
-                        'name' => $cl,
-                        'email' => $em, 
-                        'phone' => $ph
-                    ));
+                    $this->em->flush();
+                    $msg = "Se realizaron los cambios correctamente";
                 }catch(\Exception $e) {
-                    $message = $e->getMessage();
+                    $flag = false;
+                    $msg = $e->getMessage();
                 }
             }
+            return $this->json(array(
+                'status' => $flag,
+                'msg' => $msg,
+                'name' => $cl,
+                'email' => $em,
+                'phone' => $ph
+            ));
         }
         $response = array(
             'status' => "",
@@ -248,7 +259,7 @@ class ClientesController extends AbstractController
      * @Route("/clientes/editAddress/{id}", name="editClientesAddress")
      */
     public function editAddress($id, Request $request){
-        $direccion = $this->getDoctrine()
+        $d = $this->em
         ->getRepository(Direccion::class)
         ->findOneBy([
             'id' => $id
@@ -256,44 +267,38 @@ class ClientesController extends AbstractController
         $form = $this->createForm(AddressType::class, new Direccion());
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
-            $entityManager = $this->getDoctrine()->getManager();
             $address = $form['name_address']->getData();
             $zone = $form['fkZone']->getData();
+            $flag = true;
+            $msg = "";
             if($address == null || $zone == null){
-                return $this->json(array(
-                    'status' => false, 
-                    'msg' => ''
-                ));
-            }else{
-                $direccion = $this->getDoctrine()
-                ->getRepository(Direccion::class)
-                ->findOneBy([
-                    'id' => $id
-                ]);
-                $direccion->setNameAddress($address); 
-                $direccion->setFkZone($zone); 
-                $entityManager->persist($direccion); 
-                try{
-                    $entityManager->flush(); 
-                    
-                }catch(\Exception $e) {
-                    $message = $e->getMessage();
-                }
-                return $this->json(array(
-                    'status' => true, 
-                    'msg' => "Se ha realizado con exito",
-                )); 
+                $flag = false;
+                $msg =  "No se estan recibiendo todos los datos";
             }
+            if($flag){
+                $d->setNameAddress($address);
+                $d->setFkZone($zone);
+                $this->em->persist($d);
+                try{
+                    $this->em->flush();
+                    $msg = "Se ha editado correctamente";
+                }catch(\Exception $e) {
+                    $flag = false;
+                    $msg = $e->getMessage();
+                }
+            }
+            return $this->json(array(
+                'status' => $flag,
+                'msg' => $msg,
+            ));
         }
         $response = array(
             'status' => "",
             'message' =>  $this->renderView('clientes/editAddress.html.twig' , [
                 'id' => $id, 
                 'form' => $form->createView(), 
-                'address' => $direccion->getNameAddress(),
-                'idzona' => (string) $direccion->getFkZone()->getId(),
-                /*'idpaquete' => (string) $direccion->getFkPacket()->getId(), 
-                'idinventario' => $direccion->getFkInventary() ? $direccion->getFkInventary()->getId(): null,*/    
+                'address' => $d->getNameAddress(),
+                'idzona' => (string) $d->getFkZone()->getId(),
             ])
         );
         return $this->json($response);
@@ -302,33 +307,41 @@ class ClientesController extends AbstractController
      * @Route("/clientes/deleteAddress/{id}", name="deleteClientesAddress")
      */
     public function deleteAddress($id){
-        $direccion = $this->getDoctrine()
+        $d = $this->em
             ->getRepository(Direccion::class)
             ->findOneBy([
                 'id' => $id
             ]);
-        if($direccion != null){
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($direccion);
-            $entityManager->flush();
-            return new JsonResponse([
-                'msg' => $id
-            ]);
+        $flag = true;
+        $msg = "";
+        if($d != null){
+            $this->em->remove($d);
+            try{
+                $this->em->flush();
+                $msg = "Se ha eliminado correctamente";
+            }catch(\Exception $e) {
+                $flag = false;
+                $msg = $e->getMessage();
+            }
+        }else{
+            $flag = false;
+            $msg = "Algo sucedio";
         }
+        return new JsonResponse([
+            'status' => $flag,
+            'msg' => $msg
+        ]);
     }
     /**
      * @Route("/clientes/editService/{id}", name="editClientesService")
      */
     public function editService($id){
-        $servicio = $this->getDoctrine()->getRepository(Servicio::class)
+        $servicio = $this->em->getRepository(Servicio::class)
         ->findMultiServices($id);
         $response = array(
             'status' => "",
             'message' =>  $this->renderView('clientes/editService.html.twig' , [
-                'id' => $id, 
-                //'form' => $form->createView(),
-                //'packet' => (string) $servicio->getFkPacket()->getId(),
-                //'mac' => (string) $servicio->getFkInventary()->getId()
+                'id' => $id,
                 'service'  => $servicio,
             ])
         );
