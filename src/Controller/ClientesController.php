@@ -20,7 +20,6 @@ use Symfony\Component\Serializer\Encoder\JsonEncode;
 
 class ClientesController extends AbstractController
 {
-    private static $error = "";
     /**
      * @Route("/clientes", name="clientes")
      */
@@ -35,8 +34,7 @@ class ClientesController extends AbstractController
                 $cliente->getId(),
                 $cliente->getNameClient(),
                 $cliente->getEmailClient(),   
-                $cliente->getPhoneClient(), 
-                
+                $cliente->getPhoneClient(),
             );
         }
             return $this->render('clientes/index.html.twig', [
@@ -59,17 +57,13 @@ class ClientesController extends AbstractController
             $packet = $form['name_packet']->getData();
             $ip = $form['ip']->getData();
             $flag = true; 
-            $msg = ""; 
-
+            $msg = "";
             if($name == null || $email == null || $phone == null || $address == null || $zone == null || $packet == null || $ip == null){
                 $flag = false; 
                 $msg = "No se validaron correctamente, verifique los datos."; 
             }else{
-                //Validacion del numero telefonico
                 if(! filter_var($phone, FILTER_VALIDATE_INT) && $flag){ $flag = false; $msg = "Campo telefono solo numeros.";  }
-                //Validacion de la IP
                 if(! filter_var($ip, FILTER_VALIDATE_IP) && $flag){ $flag = false; $msg = "No es una ip valida."; }
-                //Validacion que no se repita la IP Publica del cliente
                 if(count($this->getDoctrine()->getRepository(Servicio::class)->findBy([
                     'ip_service' => $ip
                 ])) > 0){ $flag = false; $msg = "La ip ya se encuentra en uso";   }
@@ -142,7 +136,6 @@ class ClientesController extends AbstractController
     /**
      * @Route("/clientes/show/{id}", name="showClientes")
      */
-
      public function show($id){
         $cliente = $this->getDoctrine()
         ->getRepository(Clientes::class)
@@ -156,14 +149,11 @@ class ClientesController extends AbstractController
             'phone' => $cliente->getPhoneClient(),
             'address' => $cliente->getFkAddress(), 
             'ticket' => $cliente->getTickets(),
-            
         ]);
      }
-
      /**
      * @Route("/clientes/editPersonal/{id}", name="editClientesPersonal")
      */
-
     public function editPersonal($id, Request $request){
         $cliente = $this->getDoctrine()
         ->getRepository(Clientes::class)
@@ -195,7 +185,6 @@ class ClientesController extends AbstractController
                 }catch(\Exception $e) {
                     $message = $e->getMessage();
                 }
-
             }
         }
         $response = array(
@@ -209,9 +198,7 @@ class ClientesController extends AbstractController
             ])
         );
         return $this->json($response);
-        
     }
-
     /**
      * @Route("/clientes/addAddress/{id}", name="addClientesAddress")
      *
@@ -222,10 +209,11 @@ class ClientesController extends AbstractController
         if($form->isSubmitted() && $form->isValid()){
             $address = $form['name_address']->getData();
             $zone = $form['fkZone']->getData();
-            if($address == null || $zone == null){
-
-            }else{
-               $con = $this->getDoctrine()->getManager();
+            $flag = true;
+            $msg = "Sucedio algo";
+            if($address == null || $zone == null){$flag = false;$msg = "No se estan recibiendo todos los datos";}
+            if($flag){
+                $con = $this->getDoctrine()->getManager();
                 $direccion = new Direccion();
                 $direccion->setNameAddress($address);
                 $direccion->setFkZone($zone);
@@ -237,16 +225,15 @@ class ClientesController extends AbstractController
                 $con->persist($direccion);
                 try {
                     $con->flush();
-                    return $this->json(array(
-                        'status' => true,
-                        'msg' => 'Se ha creado con exito'
-                    ));
+                    $msg = "Se ha registrado correctamente";
                 }catch(\Exception $e) {
-                    $message = $e->getMessage();
+                    $msg = $e->getMessage();
                 }
-
             }
-
+            return $this->json(array(
+                'status' => $flag,
+                'msg' => $msg,
+            ));
         }
         $response = array(
             'status' => "",
@@ -260,7 +247,6 @@ class ClientesController extends AbstractController
     /**
      * @Route("/clientes/editAddress/{id}", name="editClientesAddress")
      */
-
     public function editAddress($id, Request $request){
         $direccion = $this->getDoctrine()
         ->getRepository(Direccion::class)

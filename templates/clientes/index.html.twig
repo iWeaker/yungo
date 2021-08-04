@@ -34,8 +34,7 @@
 $(document).ready(function() {
     let dataSet = "{{ response }}";
     let dataSetRemove = JSON.parse(dataSet.replace(/&quot;/g,'"'));
-    let table = $('#tabla-clientes').DataTable( {
-
+    let table = $('#tabla-clientes').DataTable({
         data: dataSetRemove,
         language: {
           'paginate': {
@@ -119,7 +118,6 @@ $(document).ready(function() {
       table {
         display: inline-table !important;
       }
-  
       thead tr:not(:first-child) {
         display: none;
       }

@@ -2,9 +2,8 @@
 {% block body %}
 <div id="app" class="sm:mt-0 px-6">
     <div class="md:grid md:grid-cols-6 md:gap-6 md:grid-rows-2 md:mt-5">
-
         <div class="md:mt-0 md:col-start-1 col-end-4">
-            <p class="text-center mt-1 font-mono text-xl font-bold relative">Informacion de Ticket</p>
+            <span style="font-size:38px;font-family: "Gill Sans Extrabold", Helvetica, sans-serif">Datos del Ticket</span>
             <div class="shadow overflow-hidden sm:rounded-md">
                 <div class="px-4 py-5 bg-white sm:p-6">
                     <div class="grid grid-cols-6 gap-6">
@@ -12,54 +11,45 @@
                             <label for="nombre" class="block text-sm font-medium text-gray-700 bold">Cliente:</label>
                             <p class="font-bold">{{ ticket.getFkClient.getNameClient }}</p>
                         </div>
-                        
                         <div class="col-span-1">
                             <label for="email" class="block text-sm font-medium text-gray-700 bold">No.ticket:</label>
                             <p class="font-bold">{{ ticket.getId }}</p>
                         </div>
-
                         <div class="col-span-3">
                             <label for="domicilio" class="block text-sm font-medium text-gray-700 bold">Tipo de Problema:</label>
                             <p class="font-bold">{{ ticket.typeTicket }}</p>
                         </div>
-
                         <div class="col-span-6">
                             <label for="telefono" class="block text-sm font-medium text-gray-700 bold">Descripcion:</label>
                             <p class="font-bold">{{ ticket.getDescTicket }}</p>
                         </div>
-
+                        <div class="col-span-6">
+                            <label for="telefono" class="block text-sm font-medium text-gray-700 bold">Direccion::</label>
+                            <p class="font-bold">{{ ticket.getService.getFkAddress.getNameAddress}}</p>
+                        </div>
                         <div class="col-span-6">
                             <label for="sitios" class="block text-sm font-medium text-gray-700 bold">Estado del ticket</label>
                             <select id="estado" name="estado" autocomplete="country" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                <option value="Abierto">Abierto</option>
-                                <option value="Nuevo">Nuevo</option>
-                                <option value="Resuelto">Cerrado</option>
+                                <option value="Abierto" {% if ticket.getStatusTicket == "Abierto" %}selected{% endif%} >Abierto</option>
+                                <option value="Nuevo" {% if ticket.getStatusTicket == "Nuevo" %}selected{% endif%}>Nuevo</option>
+                                <option value="Resuelto" {% if ticket.getStatusTicket == "Resuelto" %}selected{% endif%}>Resuelto</option>
                             </select>
                         </div>
-
                         <div class="col-span-6 sm:col-span-3">
                             <label for="paquete" class="block text-sm font-medium text-gray-700 bold">Fecha Registrada</label>
                             <p class="font-bold">{{ ticket.getDateTicket|date('Y-m-d')  }}</p>
-                        </div>
-                        
-                        <div class="col-span-3 self-center justify-self-center">
-                            <button id="cambiarEstado" class="cambiarEstado inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Cambiar Estado</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-     
         <div class="md:col-start-4 md:col-end-7">
-            <p class="text-center mt-1 font-mono text-xl font-bold relative">Comentarios</p>
+            <span style="font-size:38px;font-family: "Gill Sans Extrabold", Helvetica, sans-serif">Comentarios</span>
             <div class="grid gap-6 mb-8">
                 <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800 md:overflow-y-auto md:h-72" id="comentarios">    
                 </div>
             </div>
         </div>
-
-       
         <div class="md:col-start-4 md:col-end-7 md:row-start-2">
             <form name="registrar" id="registrar" class="registrar">
                 
@@ -68,7 +58,6 @@
                     Comentar
                 </button>
             </form>
-          
             <div class="flex">
                 <form action="/upload-file/IDTIcket" method="POST" enctype="multipart/form-data">
                    
@@ -82,24 +71,39 @@
             </div>
         </div>
 
-       
-        <div class="md:col-start-1 md:col-end-4 md:row-start-2 overflow-y-auto rounded-lg">
-            <table id="historial" class="w-full sm:bg-white rounded-lg sm:shadow-lg overflow-y-scroll">
-                <thead id="cabeza" class="text-white">
-                    <tr class="bg-teal-400 flex flex-col flex-no wrap sm:table-row rounded-l-lg sm:rounded-none mb-2 sm:mb-0">
-                        <th class="p-3 text-left">IdTicket</th>
-                        <th class="p-3 text-left">Fecha</th>
-                        <th class="p-3 text-left">Estado</th>
-                    </tr>
-                </thead>
-                <tbody id="cuerpo" class="flex-1 sm:flex-none"> 
-                </tbody>
-            </table>
-         
-            <div id="archivo" class="bg-white rounded">
-
-            </div>
-        </div>
     </div>
 </div>
+    <script>
+        document.getElementById("estado").onchange = function(e){
+                $.sweetModal.confirm('¿Seguro de cambiar el estado?', function() {
+                    $.ajax({
+                        type: "POST",
+                        url: '{{ path('changeStatus', {id: ticket.getId}) }}',
+                        dataType: 'json',
+                        success: function(s){
+                            alert(s.msg);
+                        }
+                    })
+                    //$.sweetModal('Gracias por confirmar!');
+                }, function() {
+                    let newOptions = {
+                        "Abierto" : "Abierto",
+                        "Nuevo" : "Nuevo",
+                        "Resuelto" : "Resuelto"
+                    };
+                    let $el = $("#estado");
+                    $el.empty();
+                    $.each(newOptions, function(key,value) {
+                        if(value === "{{ ticket.getStatusTicket }}"){
+                            $el.append($("<option></option>").attr({
+                                "value": value,
+                                "selected": "selected"
+                            }).text(key));
+                        }else{
+                            $el.append($("<option></option>").attr("value", value).text(key));
+                        }
+                    });
+                });
+        }
+    </script>
 {% endblock %}

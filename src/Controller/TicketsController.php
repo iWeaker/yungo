@@ -167,4 +167,14 @@ class TicketsController extends AbstractController
             'ticket' => $tickets
         ]);
     }
+
+    /**
+     * @Route("/tickets/changeStatus/{id}", name="changeStatus")
+     */
+    public function changeStatus($id): JsonResponse
+    {
+        return new JsonResponse([
+            'msg' => 'Hola'
+        ]);
+    }
 }
