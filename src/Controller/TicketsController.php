@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Clientes;
 use App\Entity\Direccion;
 use App\Entity\Servicio;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,12 +16,19 @@ use Symfony\Component\HttpFoundation\Request;
 
 class TicketsController extends AbstractController
 {
+    protected $em;
+    /**
+     * @var EntityManagerInterface
+     */
+    public function  __construct(EntityManagerInterface $entityManager){
+        $this->em = $entityManager;
+    }
     /**
      * @Route("/tickets", name="tickets")
      */
     public function index(): Response
     {
-        $tickets = $this->getDoctrine()
+        $tickets = $this->em
         ->getRepository(Ticket::class)
         ->findAll();
         $response = array();
@@ -41,11 +49,10 @@ class TicketsController extends AbstractController
      * @Route("/tickets/selector", name="selectorTickets")
      */
     public function clientSelector(){
-        $clientes = $this->getDoctrine()
-            ->getRepository(Clientes::class)
-            ->findAll();
         $response = array();
-        foreach ($clientes as $cliente) {
+        foreach (( $this->getDoctrine()
+            ->getRepository(Clientes::class)
+            ->findAll()) as $cliente) {
             $response[] = array(
                 $cliente->getId(),
                 $cliente->getNameClient(),
@@ -64,14 +71,13 @@ class TicketsController extends AbstractController
      /**
      * @Route("/tickets/create/{id}", name="createTickets")
      */
-    public function create($id, Request $request): Response
+    public function create($id): Response
     {
-        $cliente = $this->getDoctrine()->getRepository(Clientes::class)->findOneBy([
+        $cliente =$this->em->getRepository(Clientes::class)->findOneBy([
             'id' => $id
         ]);
-        $servicio = $this->getDoctrine()->getRepository(Servicio::class)->findAllServicesCliente($id);
         $response = array();
-        foreach ($servicio as $s) {
+        foreach (($this->em->getRepository(Servicio::class)->findAllServicesCliente($id)) as $s) {
             $response[] = array(
                $s->getId(),
                $s->getFkAddress()->getNameAddress(),
@@ -96,10 +102,13 @@ class TicketsController extends AbstractController
             $type = $form['type_ticket']->getData();
             $status = $form['status_ticket']->getData();
             $desc = $form['desc_ticket']->getData();
+            $flag = true;
+            $msg = "";
             if($type == null || $status == null || $desc == null){
-
-            }else{
-                try {
+                $flag = false;
+                $msg = "Algun dato esta vacio";
+            }
+            if($flag){
                     $con = $this->getDoctrine();
                     $ticket = new Ticket();
                     $ticket->setDescTicket($desc);
@@ -110,22 +119,18 @@ class TicketsController extends AbstractController
                     $ticket->setdateTicket(new \DateTime());
                     $persist = $con->getManager();
                     $persist->persist($ticket);
-                    $persist->flush();
-                    return new JsonResponse([
-                        'status' => true,
-                        'msg' => "Se ha logrado con exito"
-                    ]);
-                }catch(\Exception $e){
 
-                        return new JsonResponse([
-                            'status' => true,
-                            'msg' => $e->getMessage()
-                        ]);
+                try {
+                    $persist->flush();
+                    $msg = "Se ha insertado correctamente";
+                }catch(\Exception $e){
+                    $flag = false;
+                    $msg = $e->getMessage();
                 }
             }
             return new JsonResponse([
-                'status' => true,
-                'msg' => $type." ".$status." ".$desc,
+                'status' => $flag,
+                'msg' => $msg,
             ]);
         }
         return $this->render('tickets/createWithService.html.twig', [
@@ -138,12 +143,12 @@ class TicketsController extends AbstractController
      * @Route("/tickets/fetchAddress/{id}", name="fetchAddress")
      */
     public function createFetchAddress($id){
-        $address = $this->getDoctrine()
+        $response = array();
+        foreach (($this->em
             ->getRepository(Direccion::class)
             ->findBy([
                 'clientes' => $id
-            ]);
-        foreach ($address as $a) {
+            ])) as $a) {
             $response[] = array(
                 'id' => $a->getId(),
                 'address' => $a->getNameAddress()

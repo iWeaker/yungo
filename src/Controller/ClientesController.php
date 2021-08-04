@@ -31,7 +31,7 @@ class ClientesController extends AbstractController
      */
     public function index(): Response
     {
-        $clientes = $this->getDoctrine()
+        $clientes = $this->em
         ->getRepository(Clientes::class)
         ->findAll();
         $response = array();
@@ -71,7 +71,7 @@ class ClientesController extends AbstractController
             if($flag){
                 if(! filter_var($phone, FILTER_VALIDATE_INT) && $flag){ $flag = false; $msg = "Campo telefono solo numeros.";  }
                 if(! filter_var($ip, FILTER_VALIDATE_IP) && $flag){ $flag = false; $msg = "No es una ip valida."; }
-                if(count($this->getDoctrine()->getRepository(Servicio::class)->findBy([
+                if(count($this->em->getRepository(Servicio::class)->findBy([
                     'ip_service' => $ip
                 ])) > 0){ $flag = false; $msg = "La ip ya se encuentra en uso";   }
                 if($flag){
@@ -115,7 +115,7 @@ class ClientesController extends AbstractController
      */
     public function delete($id): JsonResponse
     {
-        $cliente = $this->getDoctrine()
+        $cliente = $this->em
             ->getRepository(Clientes::class)
             ->findOneBy([
                 'id' => $id
@@ -141,7 +141,7 @@ class ClientesController extends AbstractController
      * @Route("/clientes/show/{id}", name="showClientes")
      */
      public function show($id){
-        $cliente = $this->getDoctrine()
+        $cliente = $this->em
         ->getRepository(Clientes::class)
         ->findOneBy([
             'id' => $id
@@ -159,7 +159,7 @@ class ClientesController extends AbstractController
      * @Route("/clientes/editPersonal/{id}", name="editClientesPersonal")
      */
     public function editPersonal($id, Request $request){
-        $cliente = $this->getDoctrine()
+        $cliente = $this->em
         ->getRepository(Clientes::class)
         ->findOneBy([
             'id' => $id
@@ -167,7 +167,6 @@ class ClientesController extends AbstractController
         $form = $this->createForm(ClientType::class, new Clientes());
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
-
             $cl = $form['name_client']->getData();
             $em = $form['email_client']->getData();
             $ph = $form['phone_client']->getData();
@@ -224,18 +223,17 @@ class ClientesController extends AbstractController
             $msg = "Sucedio algo";
             if($address == null || $zone == null){$flag = false;$msg = "No se estan recibiendo todos los datos";}
             if($flag){
-                $con = $this->getDoctrine()->getManager();
                 $direccion = new Direccion();
                 $direccion->setNameAddress($address);
                 $direccion->setFkZone($zone);
                 /** @var Clientes|object|null $client */
-                $client= $this->getDoctrine()->getRepository(Clientes::class)->findOneBy([
+                $client= $this->em->getRepository(Clientes::class)->findOneBy([
                     'id'=> $id
                 ]);
                 $direccion->setClientes($client);
-                $con->persist($direccion);
+                $this->em->persist($direccion);
                 try {
-                    $con->flush();
+                    $this->em->flush();
                     $msg = "Se ha registrado correctamente";
                 }catch(\Exception $e) {
                     $msg = $e->getMessage();
@@ -352,40 +350,35 @@ class ClientesController extends AbstractController
      */
     public function editServiceSpecific($idService, $inventory, Request $request): JsonResponse
     {
-        $servicio = $this->getDoctrine()->getRepository(Servicio::class)
+        $servicio = $this->em->getRepository(Servicio::class)
             ->findOneBy([
                 'id' => $idService
             ]);
         $form = $this->createForm(ServiceType::class, new Servicio(),['myid' => $inventory]);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
-            $entityManager = $this->getDoctrine()->getManager();
             $packet = $form['fkPacket']->getData();
             $inventory = $form['fkInventary']->getData();
-            if($packet == null || $inventory == null){
-                return new JsonResponse([
-                    'status' => false,
-                    'msg' => 'Verifica los datos'
-                ]);
-            }else{
+            $flag = true;
+            $msg = "";
+            if($packet == null || $inventory == null){$flag = false;$msg = "Verifica los datos";
+            }
+            if($flag){
                 $servicio->setFkPacket($packet);
                 $servicio->setFkInventary($inventory);
-                $entityManager->persist($servicio);
+                $this->em->persist($servicio);
                 try{
-                    $entityManager->flush();
-                    return new JsonResponse([
-                        'status' => true,
-                        'msg' => 'Se ha realizado con exito'
-                    ]);
+                    $this->em->flush();
+                    $msg = "Se ha editado de manera satisfactoria";
                 }catch(\Exception $e) {
-                    $message = $e->getMessage();
-                    return new JsonResponse([
-                        'status' => false,
-                        'msg'=> 'Sucedio un problema en el sistema'
-                    ]);
+                    $flag = false;
+                    $msg = $e->getMessage();
                 }
-
             }
+            return new JsonResponse([
+                'status' => $flag,
+                'msg'=> $msg,
+            ]);
         }
         $response = array(
             'status' => "",

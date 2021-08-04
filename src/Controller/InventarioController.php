@@ -25,9 +25,9 @@ class InventarioController extends AbstractController
     /**
      * @Route("/inventario", name="inventario")
      */
-    public function index(Request $request, DataTableFactory $dataTableFactory): Response
+    public function index(): Response
     {
-        $inventario = $this->getDoctrine()
+        $inventario =$this->em
         ->getRepository(Inventario::class)
         ->findAll();
         $response = array();
@@ -47,7 +47,6 @@ class InventarioController extends AbstractController
         }
             return $this->render('inventario/index.html.twig', [
             'response' => json_encode($response),
-            'button' => '<button>hola</button>',
         ]);
     }
     /**
@@ -57,7 +56,7 @@ class InventarioController extends AbstractController
         $form = $this->createForm(NewInventaryType::class, new Inventario);
         $form->handleRequest($request); 
         if($form->isSubmitted() && $form->isValid()){
-            $brand = $form['brand_inventory']->getData(); 
+            $brand = $form['brand_inventory']->getData();
             $model = $form['model_inventory']->getData(); 
             $mac   = $form['mac_inventory']->getData();
             $type  = $form['type_inventory']->getData();
@@ -92,7 +91,7 @@ class InventarioController extends AbstractController
      */
     public function edit($id, Request  $request){
         $form = $this->createForm(InventaryType::class, new Inventario());
-        $inv = $this->getDoctrine()->getRepository(Inventario::class)->findOneBy([
+        $inv = $this->em->getRepository(Inventario::class)->findOneBy([
             'id' => $id
         ]);
         $form->handleRequest($request);
@@ -106,7 +105,7 @@ class InventarioController extends AbstractController
             if($brand == null || $model == null || $mac == null || $radio == null){$flag = false;$msg = "Algun dato no esta escrito correctamente";}
             if(!filter_var($mac, FILTER_VALIDATE_MAC)){ $flag=false; $msg = "No es valido esa Mac proporcionada"; }
             if($flag) {
-                $v = $this->getDoctrine()->getRepository(Inventario::class)->checkDuplicatedMac($id, $mac);
+                $v = $this->em->getRepository(Inventario::class)->checkDuplicatedMac($id, $mac);
                 if (count($v) > 0) {
                        $flag= false;
                        $msg = "Existe una MAC igual en el sistema";
@@ -138,7 +137,6 @@ class InventarioController extends AbstractController
             'mac' => $inv->getMacInventory()
         ]);
     }
-
     /**
      * @Route("/inventario/assign/{id}", name="assignInventario")
      * 

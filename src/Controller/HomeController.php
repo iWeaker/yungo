@@ -31,7 +31,6 @@ class HomeController extends AbstractController
     function _construct(){
         $this->encoders = [new XmlEncoder(), new JsonEncoder()];
         $this->normalizers = [new ObjectNormalizer()];
-
         $this->serializer = new Serializer($this->normalizers, $this->encoders);
     }
     /**
@@ -42,7 +41,6 @@ class HomeController extends AbstractController
         $client = $this->getDoctrine()
         ->getRepository(Clientes::class)
         ->findAll();
-    
         $response = array();
         foreach ($client as $user) {
             $response[] = array(
@@ -53,7 +51,6 @@ class HomeController extends AbstractController
                
             );
         }
-        
         return $this->render('home/index.html.twig', [
             'response' => json_encode($response)
         ]);
