@@ -37,7 +37,7 @@ CREATE TABLE `clientes` (
 
 LOCK TABLES `clientes` WRITE;
 /*!40000 ALTER TABLE `clientes` DISABLE KEYS */;
-INSERT INTO `clientes` VALUES (23,'Alejandro Bringas','iweaker4you@gmail.com','6861096448'),(25,'Alejasdk','asdasd@asdasd','686109'),(26,'Paul Nieblas','paulN2012@gmail.com','6645963251'),(27,'Mario Benson','xxx@you.com','123123124'),(28,'Vivian Long','qwerty@me.com','135797531'),(29,'Alexis Gutierrez','gutierrezAle@email.com','6861096448'),(30,'Gustavo Martinez','tavoR7@red7.com.net','6862584679'),(31,'Saul Hernandez','osunasaul98@live.com','6862829507'),(32,'Eliazar Blanco Ochoa','ebo@gmail.ar','4748314329'),(33,'Emiliano Gaytan','emiYungo@yungo.mx','9991234567'),(34,'Evo Morales Pinochet','emp@callofduty.org.bo','5623145870'),(35,'Jose Hernandez Dominguez','jhd780301@outlook.com','6863412756'),(36,'Alejandro PHP8','php@gmail.com','6861096448');
+INSERT INTO `clientes` VALUES (25,'Alejandro Bringas Martinez','asdasd@asdasd','686109'),(26,'Paul Nieblas','paulN2012@gmail.com','6645963251'),(27,'Mario Benson','xxx@you.com','123123124'),(28,'Vivian Long','qwerty@me.com','135797531'),(29,'Alexis Gutierrez','gutierrezAle@email.com','6861096448'),(30,'Gustavo Martinez','tavoR7@red7.com.net','6862584679'),(31,'Saul Hernandez','osunasaul98@live.com','6862829507'),(32,'Eliazar Blanco Ochoa','ebo@gmail.ar','4748314329'),(34,'Evo Morales Pinochet','emp@callofduty.org.bo','5623145870'),(35,'Jose Hernandez Dominguez','jhd780301@outlook.com','6863412756'),(36,'Alejandro PHP8','php@gmail.com','6861096448');
 /*!40000 ALTER TABLE `clientes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -54,10 +54,11 @@ CREATE TABLE `comentarios` (
   `image_comment` tinyint(1) NOT NULL,
   `created_at_comment` datetime NOT NULL,
   `fk_ticket_id` int(11) NOT NULL,
+  `filename` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `IDX_F54B3FC011599042` (`fk_ticket_id`),
   CONSTRAINT `FK_F54B3FC011599042` FOREIGN KEY (`fk_ticket_id`) REFERENCES `ticket` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -66,6 +67,7 @@ CREATE TABLE `comentarios` (
 
 LOCK TABLES `comentarios` WRITE;
 /*!40000 ALTER TABLE `comentarios` DISABLE KEYS */;
+INSERT INTO `comentarios` VALUES (8,'asd',0,'2021-08-05 15:34:35',11,NULL),(15,'Hola',0,'2021-08-06 12:20:40',11,NULL),(16,'Hola2',0,'2021-08-06 12:22:13',11,NULL),(22,'💕',0,'2021-08-06 13:50:33',11,NULL),(23,'💕',0,'2021-08-06 13:50:48',11,NULL),(24,'💕 ',0,'2021-08-06 13:52:01',11,NULL),(25,'💕 ',0,'2021-08-06 13:52:46',11,NULL);
 /*!40000 ALTER TABLE `comentarios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -95,7 +97,7 @@ CREATE TABLE `direccion` (
 
 LOCK TABLES `direccion` WRITE;
 /*!40000 ALTER TABLE `direccion` DISABLE KEYS */;
-INSERT INTO `direccion` VALUES (26,23,'Av Vallecitos #3394 Real del Rio',24),(29,25,'Av Vallecitos #3394 Real del Rio',24),(30,23,'Calle Vallecitos',1088),(31,36,'calle rio norte #2148',1088);
+INSERT INTO `direccion` VALUES (29,25,'Av Vallecitos #3394 Real del Rio',24),(31,36,'calle rio norte #2148',1088);
 /*!40000 ALTER TABLE `direccion` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -138,7 +140,7 @@ CREATE TABLE `inventario` (
   `brand_inventory` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `type_inventory` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -147,7 +149,7 @@ CREATE TABLE `inventario` (
 
 LOCK TABLES `inventario` WRITE;
 /*!40000 ALTER TABLE `inventario` DISABLE KEYS */;
-INSERT INTO `inventario` VALUES (6,'C1:C2:C3:C4:C5:C9','PowerBeam2','TP-LINK','Radio'),(7,'B1:B2:B3:B4:B5:B6','B23','Ubiquiti','Router'),(8,'C1:C2:C3:C4:C5:C6','LiteBeam','Ubiquiti','Omni'),(9,'A1:A2:A3:A4:A5:A6','X','Mercury','Septorial'),(10,'C3:F4:A1:C3:B2:C4','LiteBeam','Ubiquiti','Radio'),(11,'C1:C3:D3:F1:A5:B2','BMC-045','TP-LINK','Router'),(12,'3D:F2:C9:A6:B3:4F','TP-8','Mercusys','Router');
+INSERT INTO `inventario` VALUES (6,'C1:C2:C3:C4:C5:C9','PowerBeam2','TP-LINK','Radio'),(7,'B1:B2:B3:B4:B5:B6','B23','Ubiquiti','Router'),(8,'C1:C2:C3:C4:C5:C6','LiteBeam','Ubiquiti','Omni'),(9,'A1:A2:A3:A4:A5:A6','X','Mercury','Septorial'),(10,'C3:F4:A1:C3:B2:C4','LiteBeam','Ubiquiti','Radio'),(11,'C1:C3:D3:F1:A5:B2','BMC-045','TP-LINK','Router'),(12,'3D:F2:C9:A6:B3:4F','TP-8','Mercusys','Router'),(13,'M2:M3:M4:M5:M7:M8','Ubiquity','TP-Link','Radio');
 /*!40000 ALTER TABLE `inventario` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -207,7 +209,7 @@ CREATE TABLE `servicio` (
 
 LOCK TABLES `servicio` WRITE;
 /*!40000 ALTER TABLE `servicio` DISABLE KEYS */;
-INSERT INTO `servicio` VALUES (18,26,1,NULL,'172.168.1.1'),(20,29,1,NULL,'172.168.1.18'),(21,26,2,NULL,'172.168.1.4'),(22,31,3,NULL,'172.150.150.150');
+INSERT INTO `servicio` VALUES (20,29,1,NULL,'172.168.1.18'),(22,31,3,NULL,'172.150.150.150');
 /*!40000 ALTER TABLE `servicio` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -255,7 +257,7 @@ CREATE TABLE `ticket` (
   KEY `IDX_97A0ADA3ED5CA9E6` (`service_id`),
   CONSTRAINT `FK_97A0ADA378B2BEB1` FOREIGN KEY (`fk_client_id`) REFERENCES `clientes` (`id`),
   CONSTRAINT `FK_97A0ADA3ED5CA9E6` FOREIGN KEY (`service_id`) REFERENCES `servicio` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -264,7 +266,7 @@ CREATE TABLE `ticket` (
 
 LOCK TABLES `ticket` WRITE;
 /*!40000 ALTER TABLE `ticket` DISABLE KEYS */;
-INSERT INTO `ticket` VALUES (10,'Ancho de banda','2021-07-30 19:23:36','Tiene problemas de internet','Abierto',23,18),(11,'Bloqueo de Paginas','2021-08-02 10:28:24','Dice que no se le conecta a paginas concretas','Abierto',25,20),(20,'Cobertura','2021-08-02 11:12:01','Se mio solo','Nuevo',23,18),(21,'Otros','2021-08-02 11:13:52','asd','Nuevo',23,18),(22,'Cobertura','2021-08-02 11:54:13','Tiene poco alcance bala bla','Abierto',23,18);
+INSERT INTO `ticket` VALUES (11,'Bloqueo de Paginas','2021-08-02 10:28:24','Dice que no se le conecta a paginas concretas','Abierto',25,20),(23,'Otros','2021-08-02 12:41:31','XD','Resuelto',25,20),(24,'Radio Defectuoso','2021-08-04 12:33:00','Tiene problemas tecnicos','Nuevo',25,20);
 /*!40000 ALTER TABLE `ticket` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -277,4 +279,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-08-02 12:11:24
+-- Dump completed on 2021-08-06 14:28:45

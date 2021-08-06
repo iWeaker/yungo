@@ -124,10 +124,8 @@
                 if(response.status === true){
                   $("#comentarios").append(response.html);
                   $("#comentario").val("");
-                  $.sweetModal({
-                    content: response.msg,
-                    icon: $.sweetModal.ICON_SUCCESS
-                  });
+                  $("#chooseFile").val("");
+
                 }else{
                   $.sweetModal(response.msg);
                 }
@@ -135,5 +133,23 @@
             });
           })
       });
+
+      function deleteComment(id){
+        $.sweetModal.confirm('¿Seguro de eliminar este comentario?', function() {
+          $.ajax({
+            type: "POST",
+            url: '/tickets/deletecomment/'+id,
+            dataType: 'json',
+            success: function(s){
+              if(s.status === true){
+                $("#comment"+id).remove();
+                $.sweetModal(s.msg);
+              }
+            }
+          })
+        }, function() {
+
+        })
+      }
   </script>
 {% endblock %}

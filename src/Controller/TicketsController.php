@@ -179,7 +179,9 @@ class TicketsController extends AbstractController
             $response[] = array(
                 'comment' => $this->renderView('tickets/coments/comment.html.twig', [
                     'i' => $c->getId(),
-                    'c' => $c->getCommentComment()
+                    'c' => $c->getCommentComment(),
+                    'st' => $c->getImageComment(),
+                    'file' => $c->getFilename(),
                 ]),
 
             );
@@ -229,42 +231,58 @@ class TicketsController extends AbstractController
         $flag = true;
         $msg = "";
         $html = "";
+        $extension = "";
+        $newFilename = "";
         if ($request->isXmlHttpRequest()) {
-            if($request->get('c') == ""){
+            if($request->get('c') != "" || $request->get('i' != null) ){
+                    $t = $request->get('c');
+                    $i = $request->files->get('i');
+                    if($i !=  null){
+                        $extension = pathinfo($i->getClientOriginalName(), PATHINFO_EXTENSION);
+                        if($extension == "jpg" || $extension == "png" || $extension == "bat"){
+                            $originalFilename = pathinfo($i->getClientOriginalName(), PATHINFO_FILENAME);
+                            $newFilename = $originalFilename.'-'.uniqid().'.'.$extension;
+                            $newFilename = str_replace(' ', '', $newFilename);
+                            $i->move(
+                                $this->getParameter('image'),
+                                $newFilename
+                            );
+                        }else{
+                            $flag = false;
+                            $msg = "El tipo de archivo no es admitido, solo JPG, PNG o BAT";
+                        }
+                    }
+                    if($flag){
+                        $c = new Comentarios();
+                        if($i !=  null){
+                            if($extension == "jpg" || $extension == "png" ){
+                                $c->setImageComment(true);
+                            }
+                            $c->setFilename("".$newFilename);
+                        }
+                        $c->setCommentComment("" . $t);
+                        $c->setCreatedAtComment(new \DateTime());
+                        $c->setFkTicket($this->em->getRepository(Ticket::class)->findOneBy([
+                            'id' => $id
+                        ]));
+                        try {
+                            $this->em->persist($c);
+                            $this->em->flush();
+                            $flag = true;
+
+                            $html = $this->renderView('tickets/coments/comment.html.twig', [
+                                'i' => $c->getId(),
+                                'c' => $c->getCommentComment(),
+                                'st' => $c->getImageComment(),
+                                'file' => $c->getFilename(),
+                            ]);
+                        } catch (\Exception $e) {
+                            $msg = $e->getMessage();
+                        }
+                    }
+            }else{
                 $flag = false;
                 $msg = "Por favor no dejes los campos vacios";
-            }
-            if($flag){
-                $t = $request->get('c');
-                $i = $request->files->get('i');
-                $c = new Comentarios();
-                $c->setCommentComment("" . $t);
-                $c->setCreatedAtComment(new \DateTime());
-                $c->setFkTicket($this->em->getRepository(Ticket::class)->findOneBy([
-                    'id' => $id
-                ]));
-                $c->setImageComment(false);
-                $this->em->persist($c);
-                try {
-                    if($i !=  null){
-                        $originalFilename = pathinfo($i->getClientOriginalName(), PATHINFO_FILENAME);
-                        $newFilename = $originalFilename.'-'.uniqid().'.'.$i->guessExtension();
-                        $newFilename = str_replace(' ', '', $newFilename);
-                        $i->move(
-                            $this->getParameter('image'),
-                            $newFilename
-                        );
-                    }
-                    $this->em->flush();
-                    $flag = true;
-                    $msg = "Se ha modificado correctamente";
-                    $html = $this->renderView('tickets/coments/comment.html.twig', [
-                        'i' => $c->getId(),
-                        'c' => $c->getCommentComment()
-                    ]);
-                } catch (\Exception $e) {
-                    $msg = $e->getMessage();
-                }
             }
         } else {
             $flag = false;
@@ -274,6 +292,34 @@ class TicketsController extends AbstractController
             'status' => $flag,
             'msg' => $msg,
             'html' => $html,
+        ]);
+    }
+    /**
+     * @Route("/tickets/deletecomment/{id}", name="deleteComment")
+     *
+     */
+    public function deleteComment($id): JsonResponse
+    {
+        $comment = $this->em
+            ->getRepository(Comentarios::class)
+            ->findOneBy([
+                'id' => $id
+            ]);
+        $flag = true;
+        $msg = "";
+        if($comment != null){
+            try {
+                $this->em->remove($comment);
+                $this->em->flush();
+                $msg = "Se ha eliminado de manera correcta";
+            }catch(\Exception $e) {
+                $flag = false;
+                $msg = $e->getMessage();
+            }
+        }
+        return new JsonResponse([
+            'status' => $flag,
+            'msg' => $msg
         ]);
     }
 }

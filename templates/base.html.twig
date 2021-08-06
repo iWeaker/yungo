@@ -25,8 +25,8 @@
     </head>
     <body>
         <div class="flex min-h-screen" >
-            <nav class="w-60 flex-shrink-4" style="width:200px">
-                <div class="flex-auto bg-gray-900 h-full">
+            <nav class="w-60 flex-shrink-4 open" style="width:200px;">
+                <div  class="flex-auto bg-gray-900 h-full ">
                     <div class="flex flex-col overflow-y-auto" style="text-align:center;">
                         <ul class="relative m-0 p-0 list-none h-full">
                             <li class="text-white text-2xl p-4 w-full flex relative shadow-sm justify-start bg-gray-800 border-b-2 border-gray-700">
@@ -101,5 +101,27 @@
                 {% block body %}{% endblock %}
             </div>
         </div>
+
     </body>
+    <script>
+        $("body").on('click','.open',  function(e){
+            $(this).css({position:'relative'});
+            $(this).animate({
+                left: "-=200",
+            }, 50, function() {
+                $(this).css({position:'absolute'});
+            });
+            $(this).addClass("open-wait");
+            $(this).removeClass("open");
+        })
+        $("body").on('click','.x',  function(e){
+            $(".open-wait").css({position:'relative'});
+            $(".open-wait").animate({
+                left: "+=200",
+            }, 50, function() {
+
+            });
+            $(".open-wait").addClass("open").removeClass("open-wait");
+        })
+    </script>
 </html>
