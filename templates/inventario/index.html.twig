@@ -3,13 +3,9 @@
 {% block title %}Inventario{% endblock %}
 
 {% block body %}
-<div class="overflow-hidden flex flex-shrink p-4 md:flex-shrink-0">
-  <div style="width:1320px; margin:0 auto; ">
-    <span style="font-size:38px;font-family: "Gill Sans Extrabold", Helvetica, sans-serif">Inventario</span>
-  </div>
-</div>
+
 <div class= "overflow-hidden flex items-center justify-center" >
-    <div class="shadow overflow-hidden sm:rounded-md bg-white" style="margin-top:3px;margin-bottom:3px;padding:10px">
+    <div class="shadow overflow-hidden sm:rounded-md bg-white" style="margin-top:20px;margin-bottom:3px;padding:10px">
         <div class="inset-x-0 bottom-0">
            <div style="position:relative;z-index:1;margin-bottom:10px">
             <a href="/inventario/create">
@@ -62,7 +58,6 @@ $(document).ready(function() {
                         let val = $.fn.dataTable.util.escapeRegex(
                             $(this).val()
                         );
-
                         column
                             .search( val ? '^'+val+'$' : '', true, false )
                             .draw();
@@ -109,7 +104,8 @@ $(document).ready(function() {
         "columnDefs": [ {
             "targets": -1,
             "data": null,
-            "defaultContent": "<button id='edit' class='view bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' style='margin-left:6px'>Editar</button>"
+            "defaultContent": "<button id='edit' class='view bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' style='margin-left:6px'>Editar</button>" +
+                              "<button id='delete' class='view bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded' style='margin-left:6px'>Eliminar</button>"
         } ]
     } );
     $('#tabla-inventario tbody').on( 'click', 'button', function () {
@@ -128,6 +124,9 @@ $(document).ready(function() {
     body {
       height: 100%;
     }
+    .even{
+      background:#F2F2F2 !important;
+    }
      #tabla-inventario_wrapper{
       max-width:1320px
     }
@@ -140,11 +139,8 @@ $(document).ready(function() {
         display: none;
       }
     }
-  
-    td:not(:last-child) {
-      border-bottom: 0;
-    }
-  
+
+
     th select {
       border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     }

@@ -1,13 +1,8 @@
 {% extends 'base.html.twig' %}
 {% block title %}Clientes{% endblock %}
 {% block body %}
-<div class="overflow-hidden flex flex-shrink p-4 md:flex-shrink-0">
-  <div style="width:1320px; margin:0 auto; ">
-    <span style="font-size:38px;font-family: "Gill Sans Extrabold", Helvetica, sans-serif">Clientes</span>
-  </div>
-</div>
 <div class= "overflow-hidden flex items-center justify-center" >
-    <div class="shadow overflow-hidden sm:rounded-md bg-white" style="margin-top:3px;margin-bottom:3px;padding:10px">
+    <div class="shadow overflow-hidden sm:rounded-md bg-white" style="margin-top:20px;margin-bottom:3px;padding:10px">
         <div class="inset-x-0 bottom-0">
            <div style="position:absolute;z-index:1">
             <a href="/clientes/create">
@@ -54,6 +49,7 @@ $(document).ready(function() {
             { title: "Telefono", "width":100 },
             { title: "", "width":200},
         ],
+
         "columnDefs": [ {
             "targets": -1,
             "data": null,
@@ -107,6 +103,9 @@ $(document).ready(function() {
     html,
     body {
       height: 100%;
+    }
+    .even{
+      background:#F2F2F2 !important;
     }
     #tabla-clientes_wrapper{
       max-width:1320px

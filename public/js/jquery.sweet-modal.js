@@ -9,7 +9,30 @@
  * See LICENSE-MIT.txt and LICENSE-GPL.txt
  */
 
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function e(t,n,r){
+  function s(o,u){
+    if(!n[o]){
+      if(!t[o]){
+        let a=typeof require=="function"&&require;
+        if(!u&&a)return a(o,!0);
+        if(i)return i(o,!0);
+        let f=new Error("Cannot find module '"+o+"'");
+        throw f.code="MODULE_NOT_FOUND",f
+      }
+      let l=n[o]={
+        exports:{}
+      };
+      t[o][0].call(l.exports,function(e){
+        let n=t[o][1][e];
+        return s(n?n:e)
+      },l,l.exports,e,t,n,r)
+    }
+    return n[o].exports
+  }
+  let i=typeof require=="function"&&require;
+  for(var o=0;o<r.length;o++)s(r[o]);
+  return s
+})({1:[function(require,module,exports){
 var SweetModal, helpers, templates,
   bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
@@ -41,7 +64,7 @@ SweetModal = (function() {
    */
 
   SweetModal.prototype._constructButtons = function($modal) {
-    var $button, $buttons, label, name, obj, ref;
+    let $button, $buttons, label, name, obj, ref;
     $buttons = $(templates.buttons);
     if (typeof this.params.buttons === 'object' && helpers.objectSize(this.params.buttons) > 0) {
       ref = this.params.buttons;
@@ -66,7 +89,7 @@ SweetModal = (function() {
           buttonObject: obj,
           parentObject: this
         }, function(e) {
-          var result;
+          let result;
           e.preventDefault();
           result = e.data.buttonObject.action(e.data.parentObject);
           if (result === void 0 || result !== false) {
@@ -89,7 +112,7 @@ SweetModal = (function() {
    */
 
   SweetModal.prototype._constructTitle = function($overlay, $modal) {
-    var $icon, $modalTabs, $modalTabsUL, $modalTitle, $tpl, icon, key, label, ref, value;
+    let $icon, $modalTabs, $modalTabsUL, $modalTitle, $tpl, icon, key, label, ref, value;
     if (typeof this.params.title === 'string') {
       if (this.params.title !== '') {
         return $modal.find('.sweet-modal-title h2').html(this.params.title);
@@ -148,7 +171,7 @@ SweetModal = (function() {
    */
 
   SweetModal.prototype._constructContent = function($overlay, $modal) {
-    var $modalContent, $tpl, key, m, ref, value;
+    let $modalContent, $tpl, key, m, ref, value;
     if (typeof this.params.content === 'string') {
       if (m = this.params.content.match(/^\S+youtu\.?be\S+(?:v=|\/v\/)(\w+)$/)) {
         this.params.content = '<iframe width="100%" height="400" src="https://www.youtube.com/embed/' + m[1] + '" frameborder="0" allowfullscreen></iframe>';
@@ -224,7 +247,7 @@ SweetModal = (function() {
    */
 
   SweetModal.prototype.open = function() {
-    var $icon, $overlay, scope;
+    let $icon, $overlay, scope;
     scope = this;
     $overlay = this.tojQueryObject();
     $('body').append(this.$overlay);
@@ -523,7 +546,7 @@ module.exports = {
   	 * @return {SweetModal}
    */
   $.sweetModal.confirm = function(arg1, arg2, arg3, arg4) {
-    var content, errorCallback, successCallback, title;
+    let content, errorCallback, successCallback, title;
     title = '';
     if (typeof arg1 === 'string' && (typeof arg2 === 'function' || arg2 === void 0 || arg2 === null)) {
       content = arg1;
@@ -541,12 +564,12 @@ module.exports = {
       title: title,
       content: content,
       buttons: {
-        'cancel': {
+        'cancelar': {
           label: $.sweetModal.defaultSettings.confirm.cancel.label,
           action: errorCallback,
           classes: $.sweetModal.defaultSettings.confirm.cancel.classes
         },
-        'ok': {
+        'Esta bien': {
           label: $.sweetModal.defaultSettings.confirm.yes.label,
           action: successCallback,
           classes: $.sweetModal.defaultSettings.confirm.yes.classes
@@ -643,15 +666,15 @@ module.exports = {
     buttons: {},
     confirm: {
       yes: {
-        label: 'Yes',
+        label: 'Si',
         classes: 'greenB'
       },
       ok: {
-        label: 'OK',
+        label: '¡Esta bien!',
         classes: 'greenB'
       },
       cancel: {
-        label: 'Cancel',
+        label: 'Cancelar',
         classes: 'redB bordered flat'
       }
     },
@@ -678,21 +701,13 @@ module.exports = {
     openModals: []
   };
 
-  /**
-  	 * Adapter for $.confirm compatibility. This is used to be fully compatible
-  	 * with code using Tutorialzine's $.confirm plugin, by which this plugin was inspired.
-  	 *
-  	 * http://tutorialzine.com/2010/12/better-confirm-box-jquery-css3/
-   */
+
   if (typeof $.confirm !== 'function') {
     $.confirm = $.sweetModal;
     $.confirm.close = $.sweetModal.closeAll;
   }
 
-  /**
-  	 * Override native functions to call $.sweetModal:
-  	 * - alert
-   */
+
   $.sweetModal.mapNativeFunctions = function() {
     return window.alert = function(message) {
       return $.sweetModal(message);

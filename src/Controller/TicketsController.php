@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Clientes;
+use App\Entity\Comentarios;
 use App\Entity\Direccion;
 use App\Entity\Servicio;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,40 +18,45 @@ use Symfony\Component\HttpFoundation\Request;
 class TicketsController extends AbstractController
 {
     protected $em;
+
     /**
      * @var EntityManagerInterface
      */
-    public function  __construct(EntityManagerInterface $entityManager){
+    public function __construct(EntityManagerInterface $entityManager)
+    {
         $this->em = $entityManager;
     }
+
     /**
      * @Route("/tickets", name="tickets")
      */
     public function index(): Response
     {
         $tickets = $this->em
-        ->getRepository(Ticket::class)
-        ->findAll();
+            ->getRepository(Ticket::class)
+            ->findAll();
         $response = array();
         foreach ($tickets as $ticket) {
-            $response[] = array(
+                $response[] = array(
                 $ticket->getId(),
                 $ticket->getTypeTicket(),
-                $ticket->getDateTicket()->format('Y-m-d H:i:s'), 
-                $ticket->getDescTicket(), 
-                $ticket->getStatusTicket(), 
+                $ticket->getDateTicket()->format('Y-m-d H:i:s'),
+                $ticket->getDescTicket(),
+                $ticket->getStatusTicket(),
             );
         }
-            return $this->render('tickets/index.html.twig', [
-                'response' => json_encode($response)
+        return $this->render('tickets/index.html.twig', [
+            'response' => json_encode($response)
         ]);
     }
+
     /**
      * @Route("/tickets/selector", name="selectorTickets")
      */
-    public function clientSelector(){
+    public function clientSelector()
+    {
         $response = array();
-        foreach (( $this->getDoctrine()
+        foreach (($this->getDoctrine()
             ->getRepository(Clientes::class)
             ->findAll()) as $cliente) {
             $response[] = array(
@@ -62,26 +68,26 @@ class TicketsController extends AbstractController
         }
         return new JsonResponse([
             'status' => true,
-            'msg' => $this->renderView('tickets/clientSelector.html.twig',[
+            'msg' => $this->renderView('tickets/clientSelector.html.twig', [
                 'response' => json_encode($response),
             ])
         ]);
     }
-    //Ruta cuando ya se haya seleccionado el cliente
-     /**
+
+    /**
      * @Route("/tickets/create/{id}", name="createTickets")
      */
     public function create($id): Response
     {
-        $cliente =$this->em->getRepository(Clientes::class)->findOneBy([
+        $cliente = $this->em->getRepository(Clientes::class)->findOneBy([
             'id' => $id
         ]);
         $response = array();
         foreach (($this->em->getRepository(Servicio::class)->findAllServicesCliente($id)) as $s) {
             $response[] = array(
-               $s->getId(),
-               $s->getFkAddress()->getNameAddress(),
-               $s->getIpService(),
+                $s->getId(),
+                $s->getFkAddress()->getNameAddress(),
+                $s->getIpService(),
             );
         }
         return $this->render('tickets/create.html.twig', [
@@ -90,40 +96,37 @@ class TicketsController extends AbstractController
             'response' => json_encode($response),
         ]);
     }
-    //Ruta cuando ya se haya seleccionado el cliente y su servicio (IP)
+
     /**
      * @Route("/tickets/create/{id}/{service}", name="createTicketsNext")
      */
-    public function createNext($id,$service,  Request $request): Response
+    public function createNext($id, $service, Request $request): Response
     {
         $form = $this->createForm(NewTicketType::class, new Ticket());
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
             $type = $form['type_ticket']->getData();
             $status = $form['status_ticket']->getData();
             $desc = $form['desc_ticket']->getData();
             $flag = true;
             $msg = "";
-            if($type == null || $status == null || $desc == null){
+            if ($type == null || $status == null || $desc == null) {
                 $flag = false;
                 $msg = "Algun dato esta vacio";
             }
-            if($flag){
-                    $con = $this->getDoctrine();
-                    $ticket = new Ticket();
-                    $ticket->setDescTicket($desc);
-                    $ticket->setTypeTicket($type);
-                    $ticket->setStatusTicket($status);
-                    $ticket->setFkClient($con->getRepository(Clientes::class)->findOneBy(['id' => $id]));
-                    $ticket->setService($con->getRepository(Servicio::class)->findOneBy(['id' => $service]));
-                    $ticket->setdateTicket(new \DateTime());
-                    $persist = $con->getManager();
-                    $persist->persist($ticket);
-
+            if ($flag) {
+                $ticket = new Ticket();
+                $ticket->setDescTicket($desc);
+                $ticket->setTypeTicket($type);
+                $ticket->setStatusTicket($status);
+                $ticket->setFkClient($this->em->getRepository(Clientes::class)->findOneBy(['id' => $id]));
+                $ticket->setService($this->em->getRepository(Servicio::class)->findOneBy(['id' => $service]));
+                $ticket->setdateTicket(new \DateTime());
+                $this->em->persist($ticket);
                 try {
-                    $persist->flush();
+                    $this->em->flush();
                     $msg = "Se ha insertado correctamente";
-                }catch(\Exception $e){
+                } catch (\Exception $e) {
                     $flag = false;
                     $msg = $e->getMessage();
                 }
@@ -142,7 +145,8 @@ class TicketsController extends AbstractController
      *
      * @Route("/tickets/fetchAddress/{id}", name="fetchAddress")
      */
-    public function createFetchAddress($id){
+    public function createFetchAddress($id)
+    {
         $response = array();
         foreach (($this->em
             ->getRepository(Direccion::class)
@@ -159,27 +163,118 @@ class TicketsController extends AbstractController
             ]
         );
     }
+
     /**
      * @Route("/tickets/show/{id}", name="showTickets")
      */
-    public function show($id){
-        $tickets = $this->getDoctrine()
-        ->getRepository(Ticket::class)
-        ->findOneBy([
-            'id' => $id
-        ]);
-        return $this->render('tickets/show.html.twig' , [
-            'ticket' => $tickets
+    public function show($id)
+    {
+        $tickets = $this->em
+            ->getRepository(Ticket::class)
+            ->findOneBy([
+                'id' => $id
+            ]);
+        $response = array();
+        foreach ($tickets->getComentarios() as $c) {
+            $response[] = array(
+                'comment' => $this->renderView('tickets/coments/comment.html.twig', [
+                    'i' => $c->getId(),
+                    'c' => $c->getCommentComment()
+                ]),
+
+            );
+        }
+        return $this->render('tickets/show.html.twig', [
+            'ticket' => $tickets,
+            'response' => $response
         ]);
     }
 
     /**
      * @Route("/tickets/changeStatus/{id}", name="changeStatus")
+     *
      */
     public function changeStatus($id): JsonResponse
     {
+        $t = $this->em->getRepository(Ticket::class)->findOneBy([
+            'id' => $id
+        ]);
+        $flag = false;
+        $msg = "Hubo algun problema";
+        if (isset($_POST['st']) && !empty($_POST['st'])) {
+            if ($t != null) {
+                $t->setStatusTicket($_POST['st']);
+                $this->em->persist($t);
+                try {
+                    $this->em->flush();
+                    $flag = true;
+                    $msg = "Se ha modificado correctamente";
+                } catch (\Exception $e) {
+                    $msg = $e->getMessage();
+                }
+            }
+        }
         return new JsonResponse([
-            'msg' => 'Hola'
+            'status' => $flag,
+            'msg' => $msg
+        ]);
+    }
+
+    /**
+     * @Route("/tickets/comment/{id}", name="newComment")
+     *
+     */
+    public function comment($id, Request $request): JsonResponse
+    {
+        $flag = true;
+        $msg = "";
+        $html = "";
+        if ($request->isXmlHttpRequest()) {
+            if($request->get('c') == ""){
+                $flag = false;
+                $msg = "Por favor no dejes los campos vacios";
+            }
+            if($flag){
+                $t = $request->get('c');
+                $i = $request->files->get('i');
+                $c = new Comentarios();
+                $c->setCommentComment("" . $t);
+                $c->setCreatedAtComment(new \DateTime());
+                $c->setFkTicket($this->em->getRepository(Ticket::class)->findOneBy([
+                    'id' => $id
+                ]));
+                $c->setImageComment(false);
+                $this->em->persist($c);
+                try {
+                    if($i !=  null){
+                        $originalFilename = pathinfo($i->getClientOriginalName(), PATHINFO_FILENAME);
+                        $newFilename = $originalFilename.'-'.uniqid().'.'.$i->guessExtension();
+                        $newFilename = str_replace(' ', '', $newFilename);
+                        $i->move(
+                            $this->getParameter('image'),
+                            $newFilename
+                        );
+                    }
+                    $this->em->flush();
+                    $flag = true;
+                    $msg = "Se ha modificado correctamente";
+                    $html = $this->renderView('tickets/coments/comment.html.twig', [
+                        'i' => $c->getId(),
+                        'c' => $c->getCommentComment()
+                    ]);
+                } catch (\Exception $e) {
+                    $msg = $e->getMessage();
+                }
+            }
+        } else {
+            $flag = false;
+            $msg = "Algo salio mal";
+        }
+        return $this->json([
+            'status' => $flag,
+            'msg' => $msg,
+            'html' => $html,
         ]);
     }
 }
+
