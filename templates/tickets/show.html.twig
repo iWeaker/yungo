@@ -46,7 +46,7 @@
       <div class="md:col-start-4 md:col-end-7">
         <p class="block uppercase tracking-wide text-gray-700 text-s font-bold mb-2" style="">Comentarios</p>
         <div class="grid bg-white shadow overflow-hidden sm:rounded-md gap-6 mb-8 p-5" >
-          <div class="min-w-0 dark:bg-gray-800 md:overflow-y-auto md:h-72 border" id="comentarios" style="height: 400px">
+          <div class="min-w-0 dark:bg-gray-800 md:overflow-y-auto md:h-72 " id="comentarios" style="height: 400px; padding-right: 10px;">
             {% if ticket.getComentarios|length == 0 %}
               No hay comentarios
             {% else %}

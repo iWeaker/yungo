@@ -24,50 +24,65 @@
         {% endblock %}
     </head>
     <body>
-        <div class="flex min-h-screen" >
-            <nav class="w-60 flex-shrink-4 open" style="width:200px;">
-                <div  class="flex-auto bg-gray-900 h-full ">
-                    <div class="flex flex-col overflow-y-auto" style="text-align:center;">
-                        <ul class="relative m-0 p-0 list-none h-full">
-                            <li class="text-white text-2xl p-4 w-full flex relative shadow-sm justify-start bg-gray-800 border-b-2 border-gray-700">
-                                <img src="{{ asset('img/icon.png') }}"></img>
-                            </li>
-                            <li class="text-white p-4 w-full flex relative shadow-sm justify-start bg-gray-800 border-b-2 border-gray-700">
-                                <div class="flex-auto my-1">
-                                    <span>Admin</span>
-                                </div>
-                            </li>
-                            <li class="p-4 w-full flex relative shadow-sm">
-                                <div class="flex-auto my-1">
-                                    <span class="text-white font-medium">Apartados de la cuenta</span>
-                                </div>
-                            </li>
-                            <div class="text-blue-400 flex relative px-4 hover:bg-gray-700 cursor-pointer">
-                                
-                                <div class="flex-auto my-1">
-                                    <a ><span>Perfil</span></a>
-                                </div>
+        <div id="mySidenav" class="sidenav bg-gray-900" style="z-index: 2">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <li class=" relative shadow-sm justify-start" style="width: 100px;">
+                <img src="{{ asset('img/icon.png') }}" />
+            </li>
+            <a href="#">About</a>
+            <a href="#">Services</a>
+            <a href="#">Clients</a>
+            <a href="#">Contact</a>
+        </div>
+        <div style="position: absolute; top:18px; left:30px; z-index:1; font-size: 30px">
+            <span onclick="openNav()" style="cursor: pointer">&#9776; </span>
+        </div>
+
+
+
+        <!--<nav class="" style="width:200px;">
+            <div  class="flex-auto bg-gray-900 h-full ">
+                <div class="flex flex-col overflow-y-auto" style="text-align:center;">
+                    <ul class="relative m-0 p-0 list-none h-full">
+
+                        <li class="text-white p-4 w-full flex relative shadow-sm justify-start bg-gray-800 border-b-2 border-gray-700">
+                            <div class="flex-auto my-1">
+                                <span>Admin</span>
                             </div>
-                            <div class="text-blue-400 flex relative px-4 hover:bg-gray-700 cursor-pointer">
-                                
-                                <div class="flex-auto my-1">
-                                    <span><a>Configuracion</a></span>
-                                </div>
+                        </li>
+                        <li class="p-4 w-full flex relative shadow-sm">
+                            <div class="flex-auto my-1">
+                                <span class="text-white font-medium">Apartados de la cuenta</span>
                             </div>
-                           
-                        </ul>
-                    </div>
+                        </li>
+                        <div class="text-blue-400 flex relative px-4 hover:bg-gray-700 cursor-pointer">
+
+                            <div class="flex-auto my-1">
+                                <a ><span>Perfil</span></a>
+                            </div>
+                        </div>
+                        <div class="text-blue-400 flex relative px-4 hover:bg-gray-700 cursor-pointer">
+
+                            <div class="flex-auto my-1">
+                                <span><a>Configuracion</a></span>
+                            </div>
+                        </div>
+
+                    </ul>
                 </div>
-            </nav>
+            </div>
+        </nav> -->
+        <div id="main" class="flex min-h-screen" >
             <div class="flex flex-col w-full">
-                <header class="text-white  left-auto top-0 right-0 shadow-sm " style="background-color:#FAFAFA">
+                <header class="  left-auto top-0 right-0 shadow-sm " style="background-color:#FAFAFA">
                     <div class="h-5 px-6 fle relative items-center justify">
                     </div>
-
                     <div class="h-6 px-6 fle relative items-center justify-end">
                         <ul class="flex justify">
                             <li class="mr-3">
-
+                                <a class="rounded-full inline-block  rounded py-1 px-8   text-blue-400"></a>
+                            </li>
+                            <li class="mr-3">
                                 <a class="rounded-full inline-block border border-blue-400 {% if app.request.attributes.get("_route") == "home" %} bg-blue-100 {% endif  %} hover:bg-blue-100 rounded py-1 px-8   text-blue-400" href="/" title="Inicio">
                                     <svg class="h-8 w-8"  width="24" height="24" viewBox="0 0 23 26" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <polyline points="5 12 3 12 12 3 21 12 19 12" />  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></svg>
                                 </a>
@@ -103,25 +118,62 @@
         </div>
 
     </body>
-    <script>
-        $("body").on('click','.open',  function(e){
-            $(this).css({position:'relative'});
-            $(this).animate({
-                left: "-=200",
-            }, 50, function() {
-                $(this).css({position:'absolute'});
-            });
-            $(this).addClass("open-wait");
-            $(this).removeClass("open");
-        })
-        $("body").on('click','.x',  function(e){
-            $(".open-wait").css({position:'relative'});
-            $(".open-wait").animate({
-                left: "+=200",
-            }, 50, function() {
+    <style>
+        /* The side navigation menu */
+        .sidenav {
+            height: 100%; /* 100% Full-height */
+            width: 250px; /* 0 width - change this with JavaScript */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Stay on top */
+            top: 0; /* Stay at the top */
+            left: -250px;
 
-            });
-            $(".open-wait").addClass("open").removeClass("open-wait");
-        })
+            overflow-x: hidden; /* Disable horizontal scroll */
+            padding-top: 60px; /* Place content 60px from the top */
+            transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+        }
+
+        /* The navigation menu links */
+        .sidenav a {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            font-size: 25px;
+            color: #818181;
+            display: block;
+            transition: 0.3s;
+        }
+
+        /* When you mouse over the navigation links, change their color */
+        .sidenav a:hover {
+            color: #f1f1f1;
+        }
+        /* Position and style the close button (top right corner) */
+        .sidenav .closebtn {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            font-size: 36px;
+            margin-left: 50px;
+        }
+        /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
+        #main {
+            transition: margin-left .5s;
+
+        }
+        /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+        @media screen and (max-height: 450px) {
+            .sidenav {padding-top: 15px;}
+            .sidenav a {font-size: 18px;}
+        }
+    </style>
+    <script>
+        function openNav() {
+            document.getElementById("mySidenav").style.left = "0";
+            document.getElementById("main").style.marginLeft = "250px";
+        }
+        function closeNav() {
+            document.getElementById("mySidenav").style.left = "-250px";
+            document.getElementById("main").style.marginLeft = "0";
+        }
     </script>
 </html>

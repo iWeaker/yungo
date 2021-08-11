@@ -1,20 +1,25 @@
-<div id="comment{{ i }}" class="bg-white block grid grid-cols-10 gap-6 shadow-sm" style="border-radius: 10px; margin-bottom:10px; padding:10px">
-  <div class="col-span-9" >
-    <div>
+<div id="comment{{ i }}" class="border p-2 rounded block grid grid-cols-12 gap-6 " style="border-radius: 10px; margin-bottom:10px; padding:10px">
+  <div class="col-span-11" >
+    <div class="m-2">
       {{ c }}
     </div>
     <div>
       {% if st == true %}
+        Imagen:
+        <br>
         <img src="{{ asset('postimg/' ~ file) }}">
       {% elseif st == false %}
         {% if file is not null %}
-          <a href="{{ asset('postimg/' ~ file) }}">ARCHIVO</a>
+          Enlace del archivo:
+          <div class="" >
+            <a href="{{ asset('postimg/' ~ file) }}">{{ file }}</a>
+          </div>
         {% endif %}
       {% endif %}
     </div>
   </div>
   <div class="col-span-1"  >
-    <div onclick="deleteComment('{{ i }}')" style="height: 24px; width: 24px">
+    <div onclick="deleteComment('{{ i }}')" style="height: 24px; width: 24px;cursor: pointer " class="text-gray-600 hover:bg-red-500 rounded hover:text-white">
       <svg  class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
       </svg>

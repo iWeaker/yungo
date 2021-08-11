@@ -52,9 +52,6 @@ class Servicio
         $this->tickets = new ArrayCollection();
     }
 
-   
-
-    
 
     public function getId(): ?int
     {

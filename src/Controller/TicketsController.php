@@ -11,6 +11,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use App\Entity\Ticket;
 use App\Form\NewTicketType;
 use Symfony\Component\HttpFoundation\Request;
@@ -234,7 +236,7 @@ class TicketsController extends AbstractController
         $extension = "";
         $newFilename = "";
         if ($request->isXmlHttpRequest()) {
-            if($request->get('c') != "" || $request->get('i' != null) ){
+            if($request->get('c') != "" || $request->files->get('i') != null){
                     $t = $request->get('c');
                     $i = $request->files->get('i');
                     if($i !=  null){
@@ -309,6 +311,8 @@ class TicketsController extends AbstractController
         $msg = "";
         if($comment != null){
             try {
+                $img = $comment->getFilename();
+                (new Filesystem())->remove($this->getParameter('image')."/".$img);
                 $this->em->remove($comment);
                 $this->em->flush();
                 $msg = "Se ha eliminado de manera correcta";

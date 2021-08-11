@@ -110,9 +110,38 @@ $(document).ready(function() {
     } );
     $('#tabla-inventario tbody').on( 'click', 'button', function () {
         let action = this.id;
-        let data = table.row( $(this).parents('tr') ).data();
-        if(action === 'edit')
-        window.location.href = "/inventario/edit/"+data[0];
+        let is = $(this);
+        let row = table.row( is.parents('tr') );
+        let data = row.data();
+        if(action === 'edit'){
+          window.location.href = "/inventario/edit/"+data[0];
+        }
+        if(action === 'delete'){
+          $.sweetModal.confirm('¿Seguro de eliminar?', function() {
+            $.ajax({
+              type: 'POST',
+              url: "/inventario/delete/"+data[0],
+              dataType: 'json',
+              success: function(a){
+                if(a.status === true){
+                  if ($(row).hasClass('child')) {
+                    table.row($(row).prev('tr')).remove().draw();
+                  } else {
+                    table
+                      .row(is.parents('tr'))
+                      .remove()
+                      .draw();
+                  }
+                  $.sweetModal(a.msg);
+                }else{
+                  $.sweetModal(a.msg);
+                }
+              }
+            });
+          }, function(){
+            $.sweetModal('Se ha cancelado la eliminacion');
+          });
+      }
     } );
     let input = $('#tabla-inventario_filter label input');
     $("#tabla-inventario_filter label").html('');

@@ -144,4 +144,37 @@ class InventarioController extends AbstractController
      public function assign($id){
          return $this->render('inventario/assign.html.twig');
      }
+
+     /**
+      * @Route("/inventario/delete/{id}", name="deleteInventario")
+      *
+      */
+     public function delete($id){
+         $inventario = $this->em
+             ->getRepository(Inventario::class)
+             ->findOneBy([
+                 'id' => $id
+             ]);
+         $flag = true;
+         $msg = "";
+         if($inventario != null){
+             if($inventario->getServicio() == null){
+                 try {
+                     $this->em->remove($inventario);
+                     $this->em->flush();
+                     $msg = "Se ha eliminado de manera correcta";
+                 }catch(\Exception $e) {
+                     $flag = false;
+                     $msg = $e->getMessage();
+                 }
+             }else{
+                 $flag = false;
+                 $msg = "Esta asignado en un servicio";
+             }
+         }
+         return new JsonResponse([
+             'status' => $flag,
+             'msg' => $msg
+         ]);
+     }
 }
